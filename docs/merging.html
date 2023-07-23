@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Merging files | MEPS tutorials</title>
+  <meta name="description" content="This is a collection of MEPS tutorials." />
+  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 Merging files | MEPS tutorials" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="This is a collection of MEPS tutorials." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Merging files | MEPS tutorials" />
+  
+  <meta name="twitter:description" content="This is a collection of MEPS tutorials." />
+  
+
+<meta name="author" content="Mark Bounthavong" />
+
+
+<meta name="date" content="2023-07-22" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="intro.html"/>
+<link rel="next" href="weights.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">MEPS Tutorials Collection</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Loading MEPS data into R</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#introduction"><i class="fa fa-check"></i><b>1.1</b> Introduction</a></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#meps-data"><i class="fa fa-check"></i><b>1.2</b> MEPS Data</a></li>
+<li class="chapter" data-level="1.3" data-path="intro.html"><a href="intro.html#load-meps-data-into-r"><i class="fa fa-check"></i><b>1.3</b> Load MEPS data into R</a></li>
+<li class="chapter" data-level="1.4" data-path="intro.html"><a href="intro.html#conclusions"><i class="fa fa-check"></i><b>1.4</b> Conclusions</a></li>
+<li class="chapter" data-level="1.5" data-path="intro.html"><a href="intro.html#acknowledgements"><i class="fa fa-check"></i><b>1.5</b> Acknowledgements</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="merging.html"><a href="merging.html"><i class="fa fa-check"></i><b>2</b> Merging files</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="merging.html"><a href="merging.html#introduction-1"><i class="fa fa-check"></i><b>2.1</b> Introduction</a></li>
+<li class="chapter" data-level="2.2" data-path="merging.html"><a href="merging.html#load-meps-data"><i class="fa fa-check"></i><b>2.2</b> Load MEPS data</a></li>
+<li class="chapter" data-level="2.3" data-path="merging.html"><a href="merging.html#merge-meps-data"><i class="fa fa-check"></i><b>2.3</b> Merge MEPS data</a></li>
+<li class="chapter" data-level="2.4" data-path="merging.html"><a href="merging.html#reduce-dataframe-to-a-few-variables"><i class="fa fa-check"></i><b>2.4</b> Reduce dataframe to a few variables</a></li>
+<li class="chapter" data-level="2.5" data-path="merging.html"><a href="merging.html#add-an-indicator-for-a-specific-icd10-diagnostic-code"><i class="fa fa-check"></i><b>2.5</b> Add an indicator for a specific ICD10 diagnostic code</a></li>
+<li class="chapter" data-level="2.6" data-path="merging.html"><a href="merging.html#collapse-dataframe-to-a-single-unique-patient"><i class="fa fa-check"></i><b>2.6</b> Collapse dataframe to a single unique patient</a></li>
+<li class="chapter" data-level="2.7" data-path="merging.html"><a href="merging.html#conclusions-1"><i class="fa fa-check"></i><b>2.7</b> Conclusions</a></li>
+<li class="chapter" data-level="2.8" data-path="merging.html"><a href="merging.html#acknowledgements-1"><i class="fa fa-check"></i><b>2.8</b> Acknowledgements</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="weights.html"><a href="weights.html"><i class="fa fa-check"></i><b>3</b> Applying weights</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="weights.html"><a href="weights.html#introduction-2"><i class="fa fa-check"></i><b>3.1</b> Introduction</a></li>
+<li class="chapter" data-level="3.2" data-path="weights.html"><a href="weights.html#types-of-weights"><i class="fa fa-check"></i><b>3.2</b> Types of weights</a></li>
+<li class="chapter" data-level="3.3" data-path="weights.html"><a href="weights.html#loading-the-data"><i class="fa fa-check"></i><b>3.3</b> Loading the data</a></li>
+<li class="chapter" data-level="3.4" data-path="weights.html"><a href="weights.html#perform-descriptive-analysis"><i class="fa fa-check"></i><b>3.4</b> Perform descriptive analysis</a></li>
+<li class="chapter" data-level="3.5" data-path="weights.html"><a href="weights.html#conclusions-2"><i class="fa fa-check"></i><b>3.5</b> Conclusions</a></li>
+<li class="chapter" data-level="3.6" data-path="weights.html"><a href="weights.html#acknowledgements-2"><i class="fa fa-check"></i><b>3.6</b> Acknowledgements</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html"><i class="fa fa-check"></i><b>4</b> Footnotes and citations</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html#footnotes"><i class="fa fa-check"></i><b>4.1</b> Footnotes</a></li>
+<li class="chapter" data-level="4.2" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html#citations"><i class="fa fa-check"></i><b>4.2</b> Citations</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="blocks.html"><a href="blocks.html"><i class="fa fa-check"></i><b>5</b> Blocks</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="blocks.html"><a href="blocks.html#equations"><i class="fa fa-check"></i><b>5.1</b> Equations</a></li>
+<li class="chapter" data-level="5.2" data-path="blocks.html"><a href="blocks.html#theorems-and-proofs"><i class="fa fa-check"></i><b>5.2</b> Theorems and proofs</a></li>
+<li class="chapter" data-level="5.3" data-path="blocks.html"><a href="blocks.html#callout-blocks"><i class="fa fa-check"></i><b>5.3</b> Callout blocks</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="sharing-your-book.html"><a href="sharing-your-book.html"><i class="fa fa-check"></i><b>6</b> Sharing your book</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="sharing-your-book.html"><a href="sharing-your-book.html#publishing"><i class="fa fa-check"></i><b>6.1</b> Publishing</a></li>
+<li class="chapter" data-level="6.2" data-path="sharing-your-book.html"><a href="sharing-your-book.html#pages"><i class="fa fa-check"></i><b>6.2</b> 404 pages</a></li>
+<li class="chapter" data-level="6.3" data-path="sharing-your-book.html"><a href="sharing-your-book.html#metadata-for-sharing"><i class="fa fa-check"></i><b>6.3</b> Metadata for sharing</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MEPS tutorials</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="merging" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Chapter 2</span> Merging files<a href="merging.html#merging" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="introduction-1" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Introduction<a href="merging.html#introduction-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We want to merge the Full-Year Consolidated Data file with the Medical Conditions file so that we can identify patients with a diagnosis of diabetes.</p>
+</div>
+<div id="load-meps-data" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Load MEPS data<a href="merging.html#load-meps-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We need to lead the MEPS Full-Year Consolidated Data file and the Medical Conditions file from 2020. There are two methods to loading MEPS data into R. Method 1 requires you to know the name of the file. For example, the Medical Conditions file from 2020 is named <code>h222</code>. In Method 2, you need to know the <code>type =</code> of data you want to load. For example, the Medical Conditions file is named <code>CONDITIONS</code>.</p>
+<p>I like to work with column names that are in the lower case, so I used the <code>tolower</code> function to change the column names from upper case to lower case.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="merging.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Load the MEPS package</span></span>
+<span id="cb5-2"><a href="merging.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;MEPS&quot;</span>) <span class="do">## You need to load the library every time you restart R</span></span>
+<span id="cb5-3"><a href="merging.html#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="merging.html#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="do">#### Method 1: Load data from AHRQ MEPS website</span></span>
+<span id="cb5-5"><a href="merging.html#cb5-5" aria-hidden="true" tabindex="-1"></a>hc2020 <span class="ot">=</span> <span class="fu">read_MEPS</span>(<span class="at">file =</span> <span class="st">&quot;h224&quot;</span>)</span>
+<span id="cb5-6"><a href="merging.html#cb5-6" aria-hidden="true" tabindex="-1"></a>mc2020 <span class="ot">=</span> <span class="fu">read_MEPS</span>(<span class="at">file =</span> <span class="st">&quot;h222&quot;</span>)</span>
+<span id="cb5-7"><a href="merging.html#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="merging.html#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="do">#### Method 2: Load data from AHRQ MEPS website</span></span>
+<span id="cb5-9"><a href="merging.html#cb5-9" aria-hidden="true" tabindex="-1"></a>hc2020 <span class="ot">=</span> <span class="fu">read_MEPS</span>(<span class="at">year =</span> <span class="dv">2020</span>, <span class="at">type =</span> <span class="st">&quot;FYC&quot;</span>)</span>
+<span id="cb5-10"><a href="merging.html#cb5-10" aria-hidden="true" tabindex="-1"></a>mc2020 <span class="ot">=</span> <span class="fu">read_MEPS</span>(<span class="at">year =</span> <span class="dv">2020</span>, <span class="at">type =</span> <span class="st">&quot;CONDITIONS&quot;</span>)</span>
+<span id="cb5-11"><a href="merging.html#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="merging.html#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Change column names to lowercase</span></span>
+<span id="cb5-13"><a href="merging.html#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(hc2020) <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">names</span>(hc2020))</span>
+<span id="cb5-14"><a href="merging.html#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(mc2020) <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">names</span>(mc2020))</span></code></pre></div>
+</div>
+<div id="merge-meps-data" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> Merge MEPS data<a href="merging.html#merge-meps-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Now that we have both the <code>h224</code> and <code>h222</code> file loaded into R, we can marge these files together. The Full-Year Consolidated Data file contains unique patients (e.g., each row is a unique patient); hence, the unique identifier <code>dupersid</code> is not repeatable. Figure 1 illustrates an example of a table with each row as a unique subject. Note how the <code>dupersid</code> does not repeat.</p>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-9"></span>
+<img src="Figure%202_1.jpg" alt="Figure 1 - Example table with unique patients." width="80%" />
+<p class="caption">
+Figure 2.1: Figure 1 - Example table with unique patients.
+</p>
+</div>
+<p>However, in the Medical Conditions file, the rows are for the number of unique diagnosis grouped by the patient. In other words, the Medical Conditions file will contain repeated <code>dupersid</code> for each diagnosis. For example, a person can have 5 diagnosis grouped by their <code>dupersid</code>. In Figure 2, we have an example table with a subject <code>dupersid = 12345</code> who has five diagnosis (<code>icd10cdx</code>).</p>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-10"></span>
+<img src="Figure%202_1.jpg" alt="Figure 2 - Example table where the unique patient identifier repeats." width="100%" />
+<p class="caption">
+Figure 2.2: Figure 2 - Example table where the unique patient identifier repeats.
+</p>
+</div>
+<p>When we merge the Full-Year Consolidated Data file (which is unique to the <code>dupersid</code>) with the Medical Conditions file (which has repeatable <code>dupersid</code>), we will merge using a 1 to many merge (<code>Figure 3a</code>). <code>Figure 3a</code> illustrates the merge between the unique subject-level table to the repeatable subject-level table.</p>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-11"></span>
+<img src="Figure%202_3a.jpg" alt="Figure 3a - Merging tables (1 to many)." width="100%" />
+<p class="caption">
+Figure 2.3: Figure 3a - Merging tables (1 to many).
+</p>
+</div>
+<p>But we also want to make sure that we include all the patients in the Full-Year Consolidated Data file. Not all patients will have a diagnostic code, so we need to be careful that we don’t accidentally drop them from the query. <code>Figure 3b</code> illustrates our intention to merge all the data from the Full-Year Consolidated Data file with some of the data from the Medical Conditions file.</p>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-12"></span>
+<img src="Figure%202_3b.jpg" alt="Figure 3b - Merging tables with all patients in the Full-Year Consolidated Data file and some of the data from the Medical Conditions file." width="100%" />
+<p class="caption">
+Figure 2.4: Figure 3b - Merging tables with all patients in the Full-Year Consolidated Data file and some of the data from the Medical Conditions file.
+</p>
+</div>
+<p>Now that we understand how we want to merge the data, we can proceed to write the code.</p>
+<p>There are two methods to merge the data files.</p>
+<p><strong>Method 1:</strong> We use the <code>merge</code> function to merge the two MEPS data files. The <code>by =</code> option is where we enter the matching variable <code>dupersid</code>. We will call the merged data set <code>total</code>. Using the `<code>merge</code> function, we are telling R that we want to do a 1 to many match between the Full-Year Consolidated Data file and the Medical Conditions file using the <code>dupersid</code> as the matching variable. We have to include the <code>all.x = TRUE</code> argument because we want to make sure we include the patients without any diagnostic codes.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="merging.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## MERGE data - Medical conditions and household component</span></span>
+<span id="cb6-2"><a href="merging.html#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># merge two data frames by ID; there are two methods to do this:</span></span>
+<span id="cb6-3"><a href="merging.html#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="merging.html#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="do">#### Method 1: Native R function; Note: all.x means that we pull all dupersid, even the ones that don&#39;t have a medical condition)</span></span>
+<span id="cb6-5"><a href="merging.html#cb6-5" aria-hidden="true" tabindex="-1"></a>total <span class="ot">&lt;-</span> <span class="fu">merge</span>(hc2020, mc2020, <span class="at">by =</span> <span class="st">&quot;dupersid&quot;</span>, <span class="at">all.x =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><strong>Method 2:</strong> We use the <code>left_join</code> function from the <code>dplyr</code> package to merge the two MEPS data files. The <code>by =</code> option is where we enter the matching variable <code>dupersid</code>. We will call the merged data set <code>total</code>. Using the <code>left_join</code> function, we are telling R that we want to do a 1 to many match between the Full-Year Consolidated Data file and the Medical Conditions file using the <code>dupersid</code> as the matching variable. The <code>left_join</code> function is based on the SQL language syntax and operates in the same manner.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="merging.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Method 2: Use SQL syntax (left_join)</span></span>
+<span id="cb7-2"><a href="merging.html#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;dplyr&quot;</span>)</span>
+<span id="cb7-3"><a href="merging.html#cb7-3" aria-hidden="true" tabindex="-1"></a>total <span class="ot">&lt;-</span> <span class="fu">left_join</span>(hc2020, mc2020, <span class="at">by =</span> <span class="st">&quot;dupersid&quot;</span>)</span></code></pre></div>
+<p>Once the two data files are merged, we will have a data frame with repeatable <code>dupersid</code>. Notice that the <code>totexp20</code> variable from Table A is merged along with the <code>icd10</code> variable from Table B.</p>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-15"></span>
+<img src="Figure%202_4.jpg" alt="Figure 4 - Merging data from Table A to Table B." width="100%" />
+<p class="caption">
+Figure 2.5: Figure 4 - Merging data from Table A to Table B.
+</p>
+</div>
+</div>
+<div id="reduce-dataframe-to-a-few-variables" class="section level2 hasAnchor" number="2.4">
+<h2><span class="header-section-number">2.4</span> Reduce dataframe to a few variables<a href="merging.html#reduce-dataframe-to-a-few-variables" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Our <code>total</code> dataframe has 1481 variables and 80,802 observations. We want to make this dataframe manageable, so we’ll create a limited dataframe with only the variables we’re interested in. To do this, we’ll use the <code>subset()</code> function.</p>
+<p>For this exercise, we’ll keep the <code>dupersid</code>, <code>varpsu.x</code>, <code>varsry.x</code>, <code>perwt20f.x</code>, and <code>icd10cdx</code> variables by using the <code>subset()</code> function. We’ll call our reduced dataframe <code>keep_mep2</code>. (Note: The <code>*.x</code> indicates the table on the left. We want to keep the <code>varpsu</code>, <code>varstr</code>, and <code>perwt20f</code> from the <code>hc2020</code> table. The <code>mc2020</code> table has duplicate variables that are denoted by <code>*.y</code>.)</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="merging.html#cb8-1" aria-hidden="true" tabindex="-1"></a>keep_meps2 <span class="ot">&lt;-</span> <span class="fu">subset</span>(total, <span class="at">select =</span> <span class="fu">c</span>(<span class="st">&quot;dupersid&quot;</span>, <span class="st">&quot;varpsu.x&quot;</span>, <span class="st">&quot;varstr.x&quot;</span>, <span class="st">&quot;perwt20f.x&quot;</span>, <span class="st">&quot;icd10cdx&quot;</span>))</span></code></pre></div>
+</div>
+<div id="add-an-indicator-for-a-specific-icd10-diagnostic-code" class="section level2 hasAnchor" number="2.5">
+<h2><span class="header-section-number">2.5</span> Add an indicator for a specific ICD10 diagnostic code<a href="merging.html#add-an-indicator-for-a-specific-icd10-diagnostic-code" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Our data frame has multiple rows grouped by the patient’s id (<code>dupersid</code>); these rows are based on the various ICD-10 diagnostic codes. For example, patient <code>12345</code> has 5 ICD-10 diagnostic codes; hence, they have 5 rows (<code>Figure 4</code>).</p>
+<p>Suppose we want to generate a binary indicator to identify patients with an ICD-10 diagnosis for diabetes (<code>E11</code>). In our example (<code>Figure 4</code>), patient <code>12345</code> has an ICD10 code for diabetes (<code>E11</code>).</p>
+<p>We can create an indicator variable that will be unique to the patient for having diabetes. What we want to see if a new variable that identifies a patients with the specific ICD-10 code of interest. <code>Figure 5</code> illustrates the indicator variable for diabetes as an additional column <code>diabetes_indicator</code>.</p>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-17"></span>
+<img src="Figure%202_5.jpg" alt="Figure 5 - Indicator variable for diabetes." width="100%" />
+<p class="caption">
+Figure 2.6: Figure 5 - Indicator variable for diabetes.
+</p>
+</div>
+<p>We create the indicator and call it <code>diabetes</code>, which is defined as <code>icd10cdx == "E11"</code>. We will code this as <code>0</code> for no diabetes and <code>1</code> for diabetes. Then, we count the number of time a patient as <code>E11</code> in their <code>icd10cdx</code> column. I added the following option to the code (<code>| is.na(total$icd10cdx)</code>) because I want to make sure that all patients in the <code>total</code> table that do not have an ICD-10 code for <code>E11</code> is coded as <code>0</code>. There may be some patients that have <code>NA</code> or missing data in the <code>icd10cdx</code> variable. If the <code>icd10cdx</code> value is <code>NA</code>, this may not be coded with a <code>0</code>. Hence, we have to add the <code>| is.na(total$icd10cdx</code> code to ensure that we get a value of <code>0</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="merging.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Change to unique subject (each row is a unique subject)</span></span>
+<span id="cb9-2"><a href="merging.html#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="do">#### Generate a variable to identify diabetes diagnosis for repeated rows</span></span>
+<span id="cb9-3"><a href="merging.html#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;tidyverse&quot;</span>)  <span class="do">## Load tidyverse</span></span>
+<span id="cb9-4"><a href="merging.html#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="merging.html#cb9-5" aria-hidden="true" tabindex="-1"></a>keep_meps2<span class="sc">$</span>diabetes[total<span class="sc">$</span>icd10cdx <span class="sc">!=</span> <span class="st">&quot;E11&quot;</span> <span class="sc">|</span> <span class="fu">is.na</span>(total<span class="sc">$</span>icd10cdx)] <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb9-6"><a href="merging.html#cb9-6" aria-hidden="true" tabindex="-1"></a>keep_meps2<span class="sc">$</span>diabetes[total<span class="sc">$</span>icd10cdx <span class="sc">==</span> <span class="st">&quot;E11&quot;</span>] <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb9-7"><a href="merging.html#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="merging.html#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(keep_meps2<span class="sc">$</span>diabetes) <span class="do">## Visualize the number of patients with diabetes and no diabetes</span></span></code></pre></div>
+<pre><code>## 
+##     0     1 
+## 87345  2693</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="merging.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">### This code chunk calculates the number of times E11 appears for a unique patient</span></span>
+<span id="cb11-2"><a href="merging.html#cb11-2" aria-hidden="true" tabindex="-1"></a>keep_meps2 <span class="ot">&lt;-</span> keep_meps2 <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="merging.html#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dupersid) <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="merging.html#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diabetes_indicator =</span> <span class="fu">sum</span>(diabetes <span class="sc">==</span> <span class="st">&quot;1&quot;</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-5"><a href="merging.html#cb11-5" aria-hidden="true" tabindex="-1"></a>  ungroup</span>
+<span id="cb11-6"><a href="merging.html#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(keep_meps2<span class="sc">$</span>diabetes_indicator)</span></code></pre></div>
+<pre><code>## 
+##     0     1     2 
+## 71804 17295   939</code></pre>
+<p>According to our results, there were 17,295 events where a patient had one diagnostic code for <code>E11</code> and 939 events where a patient had two diagnostic codes for <code>E11</code>. How did this occur? MEPS public files only list the first three digits of the ICD-10 code to protect the identity of the patient. The ICD-10 diagnostic code has more digits beyond the first three. For example, an ICD-10 diagnosis for Type 2 diabetes with diabetic chronic kidney disease is <code>E11.22</code>. Hence, there will be patients with unique ICD-10 codes that may appear identical because only the first three digits are present in the MEPS public files.</p>
+<p>In our example, we have patients with 1 and 2 ICD-10 diagnostic codes for <code>E11</code>. We would like to create a binary indicator of diabetes, so we need to take the current information and transform the variable <code>diabetes</code> in the <code>keep_meps</code> dataframe into a new variable that only has <code>0</code> and <code>1</code>.</p>
+<p>We can do this by combining the <code>mutate</code> function with the <code>ifelse</code> function. See the code below:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="merging.html#cb13-1" aria-hidden="true" tabindex="-1"></a>keep_meps2 <span class="ot">&lt;-</span> keep_meps2 <span class="sc">%&gt;%</span> </span>
+<span id="cb13-2"><a href="merging.html#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dupersid) <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="merging.html#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diabetes_binary =</span> <span class="fu">ifelse</span>(diabetes_indicator <span class="sc">&gt;=</span> <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-4"><a href="merging.html#cb13-4" aria-hidden="true" tabindex="-1"></a>  ungroup</span>
+<span id="cb13-5"><a href="merging.html#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(keep_meps2<span class="sc">$</span>diabetes_binary)</span></code></pre></div>
+<pre><code>## 
+##     0     1 
+## 71804 18234</code></pre>
+<p>Now, we have a new binary indicator variable. The <code>diabetes_binary</code> variable is coded <code>1</code> if the patient has the <code>E11</code> diagnostic code and <code>0</code> if the patient does not.</p>
+</div>
+<div id="collapse-dataframe-to-a-single-unique-patient" class="section level2 hasAnchor" number="2.6">
+<h2><span class="header-section-number">2.6</span> Collapse dataframe to a single unique patient<a href="merging.html#collapse-dataframe-to-a-single-unique-patient" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>But since this is a dataframe with duplicated patients, we want to collapse this into a dataframe where each row is a single unique patient.</p>
+<p>Since a lot of the variables in the dataframe are the same when grouped by the unique <code>dupersid</code>, we can estimate the mean and get the same value. For example, let’s look at <code>Figure 5</code> again. For <code>dupersid == 12345</code>, there are five values for <code>totexp20</code>, which are:</p>
+<ul>
+<li><p><code>5000</code> when <code>icd10</code> is <code>E11</code>,</p></li>
+<li><p><code>5000</code> when <code>icd10</code> is <code>B20</code>,</p></li>
+<li><p><code>5000</code> when <code>icd10</code> is <code>F21</code>,</p></li>
+<li><p><code>5000</code> when <code>icd10</code> is <code>Z21</code>, and</p></li>
+<li><p><code>5000</code> when <code>icd10</code> is <code>M05</code></p></li>
+</ul>
+<p>Averaging the <code>totexp20</code> for <code>dupersid == 12345</code> will result in a value of <code>5000</code>.</p>
+<p>Hence, when we average the diabetes <code>diabetes_binary</code> variable, we will get a value of <code>1</code> or <code>0</code>.</p>
+<p>Using this knowledge, we can collapse our data to a single <code>dupersid</code> and remove the duplicates.</p>
+<p>The <code>icd10cdx</code> variable will yielded <code>NA</code> because it can’t be collapsed numerically due to its <code>string</code> data type.</p>
+<p><span class="math inline">\(~\)</span></p>
+<p>There are two methods to collapse the dataframe to unique patients:</p>
+<p><strong>Method 1:</strong> Use the <code>dplyr</code> package and the <code>summarize_all</code> function with the <code>list()</code> function.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="merging.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Collapse the repeated rows to a single unique subject</span></span>
+<span id="cb15-2"><a href="merging.html#cb15-2" aria-hidden="true" tabindex="-1"></a>meps_per <span class="ot">&lt;-</span> keep_meps2 <span class="sc">%&gt;%</span> </span>
+<span id="cb15-3"><a href="merging.html#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dupersid) <span class="sc">%&gt;%</span></span>
+<span id="cb15-4"><a href="merging.html#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize_all</span>(<span class="fu">list</span>(mean))</span>
+<span id="cb15-5"><a href="merging.html#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="merging.html#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(meps_per<span class="sc">$</span>diabetes_binary)</span></code></pre></div>
+<pre><code>## 
+##     0     1 
+## 25202  2603</code></pre>
+<p><span class="math inline">\(~\)</span></p>
+<p><strong>Method 2:</strong> Use the <code>summarise</code> function. This method will generate a dataframe with two variables (<code>dupersid</code> and <code>diabetes_binary2</code>).</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="merging.html#cb17-1" aria-hidden="true" tabindex="-1"></a>meps_per2 <span class="ot">&lt;-</span> keep_meps2 <span class="sc">%&gt;%</span>  <span class="do">### An alternative method but only generates two variables (dupersid and diabetes_binary2)</span></span>
+<span id="cb17-2"><a href="merging.html#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dupersid) <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="merging.html#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">diabetes_binary2 =</span> <span class="fu">mean</span>(diabetes_binary)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a href="merging.html#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb17-5"><a href="merging.html#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="merging.html#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(meps_per2<span class="sc">$</span>diabetes_binary2)</span></code></pre></div>
+<pre><code>## 
+##     0     1 
+## 25202  2603</code></pre>
+<p>For the rest of the tutorial, I’ll use Method 1 because I want to keep the other variables.</p>
+<p><code>Figure 6</code> illustrates what our dataframe should look like after we collapsed the data to a single unique patient.</p>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-22"></span>
+<img src="Figure%202_6.jpg" alt="Figure 6 - Collapse rows to a unique patient with a diabetes indicator." width="100%" />
+<p class="caption">
+Figure 2.7: Figure 6 - Collapse rows to a unique patient with a diabetes indicator.
+</p>
+</div>
+</div>
+<div id="conclusions-1" class="section level2 hasAnchor" number="2.7">
+<h2><span class="header-section-number">2.7</span> Conclusions<a href="merging.html#conclusions-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>With this tutorial, we’ve learned how to merge two data files from MEPS and collapse them to a dataframe of unique patients. MEPS has additional data files that contain information that might be important for your work. For example, we can use these methods to merge the Prescription Drug file and create indicators for patients who are on opioids. However, you will need to carefully read through the documentation for each data file to understand what kind of information they contain. Feel free to explore using these strategies to merge additional MEPS data files to your existing cohort.</p>
+</div>
+<div id="acknowledgements-1" class="section level2 hasAnchor" number="2.8">
+<h2><span class="header-section-number">2.8</span> Acknowledgements<a href="merging.html#acknowledgements-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>There are a lot of tutorials on how to use MEPS data with R. I found the <a href="https://github.com/HHS-AHRQ/MEPS">AHRQ MEPS GitHub page</a> to be an invaluable resource.</p>
+<p><a href="https://daranzolin.github.io/">David Ranzolin</a> has a great <a href="https://rstudio-pubs-static.s3.amazonaws.com/116317_e6922e81e72e4e3f83995485ce686c14.html#/2">presentation</a> on how to use the <code>mutate</code> function in R. I liked the examples he used, and the presentation is succint and informative.</p>
+<p>Another great resource is by <a href="https://statisticsglobe.com/joachim-schork/">Joachim Schork</a>, author and founder of <a href="https://statisticsglobe.com/">Statistics Globe</a> who wrote a great <a href="https://statisticsglobe.com/sum-duplicate-rows-r">blog</a> about collapsing data on a unique identifier.</p>
+<p>I learned how to use the <code>left_join</code> function from this <a href="https://www.infoworld.com/article/3454356/how-to-merge-data-in-r-using-r-merge-dplyr-or-datatable.html">blog</a> by <a href="https://www.infoworld.com/author/Sharon-Machlis/">Sharon Machlis</a> on <a href="https://www.infoworld.com">InfoWorld</a>. She uses <code>dplyr</code> to invoke the <code>left_join</code> function which is a based on <code>SQL</code> language.</p>
+<p>This is a work in progress, and I may update this in the future.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="weights.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/02-merging.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
