@@ -1,4 +1,6 @@
-# Introduction
+# Loading MEPS data into R {#intro}
+
+## Introduction
 The Agency for Healthcare Research and Quality (AHRQ) [Medical Expenditure Panel Survey (MEPS)](https://www.meps.ahrq.gov/mepsweb/) is a set of data on U.S. households about their healthcare expenditures. It includes data on the individual / household demographics, socioeconomic status, insurance coverage, and healthcare expenditures. Healthcare expenditures include data on health-related spending, medical conditions, prescriptions, and utilization (e.g., number of office-based visits). MEPS draws upon a nationally representative subsample from the [National Health Interview Survey](https://www.cdc.gov/nchs/nhis/index.htm?CDC_AA_refVal=https%3A%2F%2Fwww.cdc.gov%2Fnchs%2Fnhis.htm), which is conducted by the [National Center for Health Statistics](https://www.cdc.gov/nchs/index.htm). Hence, MEPS provides researchers with the ability to generate estimates for the representative U.S. population. 
 
 ## MEPS Data

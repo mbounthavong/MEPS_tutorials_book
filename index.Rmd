@@ -7,24 +7,27 @@ documentclass: book
 bibliography: [book.bib, packages.bib]
 # url: your book url like https://bookdown.org/yihui/bookdown
 # cover-image: path to the social sharing image like images/cover.jpg
-description: |
-  This is a minimal example of using the bookdown package to write a book.
-  The HTML output format for this example is bookdown::gitbook,
-  set in the _output.yml file.
+description: | 
+  This is a collection of MEPS tutorials. 
 link-citations: yes
 github-repo: rstudio/bookdown-demo
 ---
 
 # About {-} 
 
-This is a collection of tutorials that use data from the Agency for Healthcare Research and Quality (AHRQ) Medical Expenditure Panel Survey (MEPS). 
+This is a collection of tutorials that use data from the Agency for Healthcare Research and Quality (AHRQ) [Medical Expenditure Panel Survey (MEPS)](https://meps.ahrq.gov/mepsweb/). 
 
 These tutorials use [R](https://cran.r-project.org/) and [RStudio](https://posit.co/products/open-source/rstudio/) for data loading, manipulation, analysis, and presentation. 
 
-Chapter 1 provides an introduction on how to load and import the data into R.
+The GitHub link to the MEPS tutorials collection: https://mbounthavong.github.io/MEPS_tutorials_book/
 
+Chapter [1](#intro) provides an introduction on how to load and import MEPS data into R.
 
+Chapter [2](#merging) is an instruction on how to merge various MEPS data files.
 
+Chapter [3](#weights) focuses on applying weights to the population.
+
+Further chapters are forthcoming.
 
 ```{r include=FALSE}
 # automatically create a bib database for R packages

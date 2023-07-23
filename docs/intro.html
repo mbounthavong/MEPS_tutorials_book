@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 5 Blocks | MEPS tutorials</title>
+  <title>Chapter 1 Loading MEPS data into R | MEPS tutorials</title>
   <meta name="description" content="This is a collection of MEPS tutorials." />
   <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 5 Blocks | MEPS tutorials" />
+  <meta property="og:title" content="Chapter 1 Loading MEPS data into R | MEPS tutorials" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="This is a collection of MEPS tutorials." />
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 5 Blocks | MEPS tutorials" />
+  <meta name="twitter:title" content="Chapter 1 Loading MEPS data into R | MEPS tutorials" />
   
   <meta name="twitter:description" content="This is a collection of MEPS tutorials." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="footnotes-and-citations.html"/>
-<link rel="next" href="sharing-your-book.html"/>
+<link rel="prev" href="index.html"/>
+<link rel="next" href="merging.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -225,30 +225,83 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="blocks" class="section level1 hasAnchor" number="5">
-<h1><span class="header-section-number">Chapter 5</span> Blocks<a href="blocks.html#blocks" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="equations" class="section level2 hasAnchor" number="5.1">
-<h2><span class="header-section-number">5.1</span> Equations<a href="blocks.html#equations" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Here is an equation.</p>
-<p><span class="math display" id="eq:binom">\[\begin{equation}
-  f\left(k\right) = \binom{n}{k} p^k\left(1-p\right)^{n-k}
-  \tag{5.1}
-\end{equation}\]</span></p>
-<p>You may refer to using <code>\@ref(eq:binom)</code>, like see Equation <a href="blocks.html#eq:binom">(5.1)</a>.</p>
+<div id="intro" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">Chapter 1</span> Loading MEPS data into R<a href="intro.html#intro" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="introduction" class="section level2 hasAnchor" number="1.1">
+<h2><span class="header-section-number">1.1</span> Introduction<a href="intro.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The Agency for Healthcare Research and Quality (AHRQ) <a href="https://www.meps.ahrq.gov/mepsweb/">Medical Expenditure Panel Survey (MEPS)</a> is a set of data on U.S. households about their healthcare expenditures. It includes data on the individual / household demographics, socioeconomic status, insurance coverage, and healthcare expenditures. Healthcare expenditures include data on health-related spending, medical conditions, prescriptions, and utilization (e.g., number of office-based visits). MEPS draws upon a nationally representative subsample from the <a href="https://www.cdc.gov/nchs/nhis/index.htm?CDC_AA_refVal=https%3A%2F%2Fwww.cdc.gov%2Fnchs%2Fnhis.htm">National Health Interview Survey</a>, which is conducted by the <a href="https://www.cdc.gov/nchs/index.htm">National Center for Health Statistics</a>. Hence, MEPS provides researchers with the ability to generate estimates for the representative U.S. population.</p>
 </div>
-<div id="theorems-and-proofs" class="section level2 hasAnchor" number="5.2">
-<h2><span class="header-section-number">5.2</span> Theorems and proofs<a href="blocks.html#theorems-and-proofs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Labeled theorems can be referenced in text using <code>\@ref(thm:tri)</code>, for example, check out this smart theorem <a href="blocks.html#thm:tri">5.1</a>.</p>
-<div class="theorem">
-<p><span id="thm:tri" class="theorem"><strong>Theorem 5.1  </strong></span>For a right triangle, if <span class="math inline">\(c\)</span> denotes the <em>length</em> of the hypotenuse
-and <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> denote the lengths of the <strong>other</strong> two sides, we have
-<span class="math display">\[a^2 + b^2 = c^2\]</span></p>
+<div id="meps-data" class="section level2 hasAnchor" number="1.2">
+<h2><span class="header-section-number">1.2</span> MEPS Data<a href="intro.html#meps-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>MEPS data are located on their website in their <a href="https://www.meps.ahrq.gov/mepsweb/data_stats/download_data_files.jsp">data files page</a>. You can find data from 1996 to the most recent available year (during the writing of this tutorial, 2020 was the latest release).</p>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-2"></span>
+<img src="Figure%201.jpg" alt="Figure 1 - Location of MEPS data files" width="100%" />
+<p class="caption">
+Figure 1.1: Figure 1 - Location of MEPS data files
+</p>
 </div>
-<p>Read more here <a href="https://bookdown.org/yihui/bookdown/markdown-extensions-by-bookdown.html" class="uri">https://bookdown.org/yihui/bookdown/markdown-extensions-by-bookdown.html</a>.</p>
+<p>The MEPS data files include the <a href="https://www.meps.ahrq.gov/mepsweb/data_stats/download_data_files_detail.jsp?cboPufNumber=HC-224">Full-Year Consolidated Data files</a>, which is the calendar-year summary of the different longitudinal panels. The Full-Year Consolidated Data files contain information on the annual healthcare expenditures by the type of care; it contains data on spending, insurance coverage, health status, patient satisfaction, and several health conditions. The Full-Year Consolidated Data files also contains information from several surveys (e.g,. Diabetes Care Survey).</p>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-3"></span>
+<img src="Figure%202.jpg" alt="Figure 2 - Full-Year Consolidated Data files and other data types" width="100%" />
+<p class="caption">
+Figure 1.2: Figure 2 - Full-Year Consolidated Data files and other data types
+</p>
 </div>
-<div id="callout-blocks" class="section level2 hasAnchor" number="5.3">
-<h2><span class="header-section-number">5.3</span> Callout blocks<a href="blocks.html#callout-blocks" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The R Markdown Cookbook provides more help on how to use custom blocks to design your own callouts: <a href="https://bookdown.org/yihui/rmarkdown-cookbook/custom-blocks.html" class="uri">https://bookdown.org/yihui/rmarkdown-cookbook/custom-blocks.html</a></p>
+</div>
+<div id="load-meps-data-into-r" class="section level2 hasAnchor" number="1.3">
+<h2><span class="header-section-number">1.3</span> Load MEPS data into R<a href="intro.html#load-meps-data-into-r" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>MEPS data can be downloaded onto your local storage and read into a statistical software program such as Stata or R. But you can also communicate directly with the AHRQ MEPS website to load your data rather than having to download it. We will load the Full-Year Consolidated Data file from 2020, which is named <code>HC-224</code>. To find out the name of the file, you will need to go MEPS data files site and click on the Full-Year Consolidated Data files. In this page (Figure 2), you can see the data file with the code <code>HC-224</code>, which is the Full-Year Consolidated Data file for 2020. When we enter this into our R code, we will use the file name <code>h224</code>.</p>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-4"></span>
+<img src="Figure%203.jpg" alt="Figure 3 - H224 is the MEP 2020 Full-Year Consolidated Data file." width="100%" />
+<p class="caption">
+Figure 1.3: Figure 3 - H224 is the MEP 2020 Full-Year Consolidated Data file.
+</p>
+</div>
+<p>You will need to download and install the <a href="https://github.com/e-mitchell/meps_r_pkg"><code>MEPS</code> package</a>. The <code>MEPS</code> package will provide tools for you to load and manipulate the MEPS Data files. You will need to have R <code>devtools</code> package installed.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="intro.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Install the devtools package</span></span>
+<span id="cb1-2"><a href="intro.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;devtools&quot;) ## You only need to install this once</span></span>
+<span id="cb1-3"><a href="intro.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># library(&quot;devtools&quot;)  ## You will need to reload the MEPS package each time you restart R</span></span>
+<span id="cb1-4"><a href="intro.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># install_github(&quot;e-mitchell/meps_r_pkg/MEPS&quot;) ## This will install the MEPS package for R</span></span></code></pre></div>
+<p>There are two methods to load MEPS data into R.</p>
+<p>Method 1 requires that you know the file name. In this example, the MEPS 2020 Full-Year Consolidated Data file is named <code>h224</code>. We will use the <code>read_MEPS</code> function to load the MEPS data onto R.</p>
+<p>When using Method 2 to load the MEPS data, we don’t need to know the file name, but we need to know the year and the data type. For example, for the Full-Year Consolidated Data file, we use the <code>year = 2020</code> and <code>type = "FYC"</code> option. For this method, we will also use the <code>read_MEPS</code> function to the MEPS data onto R.</p>
+<p>The <code>tolower</code> function is used to change all the variable names from upper case to lower case. MEPS defaults the column names to upper case. I like to change this to lower case because it’s easier for me to type.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="intro.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Load the MEPS package</span></span>
+<span id="cb2-2"><a href="intro.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;MEPS&quot;</span>) <span class="do">## You need to load the library every time you restart R</span></span>
+<span id="cb2-3"><a href="intro.html#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="intro.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="do">#### Method 1: Load data from AHRQ MEPS website</span></span>
+<span id="cb2-5"><a href="intro.html#cb2-5" aria-hidden="true" tabindex="-1"></a>hc2020 <span class="ot">=</span> <span class="fu">read_MEPS</span>(<span class="at">file =</span> <span class="st">&quot;h224&quot;</span>)</span>
+<span id="cb2-6"><a href="intro.html#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="intro.html#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="do">#### Method 2: Load data from AHRQ MEPS website</span></span>
+<span id="cb2-8"><a href="intro.html#cb2-8" aria-hidden="true" tabindex="-1"></a>hc2020 <span class="ot">=</span> <span class="fu">read_MEPS</span>(<span class="at">year =</span> <span class="dv">2020</span>, <span class="at">type =</span> <span class="st">&quot;FYC&quot;</span>)</span>
+<span id="cb2-9"><a href="intro.html#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="intro.html#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Change column names to lowercase</span></span>
+<span id="cb2-11"><a href="intro.html#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(hc2020) <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">names</span>(hc2020))</span></code></pre></div>
+<p>There are over 1400 variables in the MEPS 2020 Full-Year Consolidated Data file. We can reduce this to the essential variables using the <code>subset</code> function. This will generate a smaller data frame that we will call <code>keep_meps</code>. The variables that we want to collect are the subject unique identifier (<code>dupersid</code>), the survey weights (<code>varpsu</code>, <code>varstr</code>, <code>perwt20f</code>), and the total healthcare expenditures for 2020 (<code>totexp20</code>).</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="intro.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Keep the subject&#39;s unique ID, survey weights, and total expenditures</span></span>
+<span id="cb3-2"><a href="intro.html#cb3-2" aria-hidden="true" tabindex="-1"></a>keep_meps <span class="ot">&lt;-</span> <span class="fu">subset</span>(hc2020, <span class="at">select =</span> <span class="fu">c</span>(dupersid, varpsu, varstr, perwt20f, totexp20))</span>
+<span id="cb3-3"><a href="intro.html#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="intro.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(keep_meps) <span class="do">## View the first six rows of the data frame</span></span></code></pre></div>
+<pre><code>## # A tibble: 6 × 5
+##   dupersid   varpsu varstr perwt20f totexp20
+##   &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 2320005101      1   2079    8418.      459
+## 2 2320005102      1   2079    5200.      564
+## 3 2320006101      1   2028    2140.      140
+## 4 2320006102      1   2028    2216.     4673
+## 5 2320006103      1   2028    4157.      410
+## 6 2320012102      2   2069    1961.     2726</code></pre>
+<p>Since MEPS uses a complex survey design, these weights are needed to estimate standard errors that are reflective of the representative sample of the U.S. population. We’ll learn how to apply these survey weights to the MEPS data files in a future tutorial.</p>
+</div>
+<div id="conclusions" class="section level2 hasAnchor" number="1.4">
+<h2><span class="header-section-number">1.4</span> Conclusions<a href="intro.html#conclusions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Loading MEPS data into R allows us to perform analysis easily and quickly. In this tutorial, you learned how to load MEPS data into R directly from the MEPS website. However, you can also download the MEPS data onto your local storage and use the <code>setwd</code> command to set the working directory.</p>
+<p>In future tutorials, we’ll learn how to apply the survey weights and perform descriptive analyses using the MEPS data files.</p>
+</div>
+<div id="acknowledgements" class="section level2 hasAnchor" number="1.5">
+<h2><span class="header-section-number">1.5</span> Acknowledgements<a href="intro.html#acknowledgements" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>There are a lot of tutorials on how to use MEPS data with R. I found the <a href="https://github.com/HHS-AHRQ/MEPS">AHRQ MEPS GitHub page</a> to be an invaluable resource.</p>
+<p>This is a work in progress, and I may update this in the future.</p>
 
 </div>
 </div>
@@ -257,8 +310,8 @@ and <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</
           </div>
         </div>
       </div>
-<a href="footnotes-and-citations.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="sharing-your-book.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="merging.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -289,7 +342,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/USERNAME/REPO/edit/BRANCH/05-blocks.Rmd",
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/01-intro.Rmd",
 "text": "Edit"
 },
 "history": {

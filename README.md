@@ -1,13 +1,16 @@
-Welcome! 
+Welcome!
 
-This is a minimal example of a book based on R Markdown and **bookdown** (https://github.com/rstudio/bookdown). 
+This is a collection of MEPS tutorials. This collection uses R and RStudio to load, manipulate, analyze, and present results using MEPS data. 
 
-This template provides a skeleton file structure that you can edit to create your book. 
+Each tutorial is divided by chapters, which reflect the topic / theme of the instruction. 
 
-The contents inside the .Rmd files provide some pointers to help you get started, but feel free to also delete the content in each file and start fresh.
+Chapter 1 is about loading MEPS data into R
 
-Additional resources:
+Chapter 2 focuses on merging various MEPS data files. 
 
-The **bookdown** book: https://bookdown.org/yihui/bookdown/
+Chapter 3 provided instructions on how to apply weights to the MEPS data. 
 
-The **bookdown** package reference site: https://pkgs.rstudio.com/bookdown
+Further chapters on MEPS-related topics are forthcoming. 
+
+Book link: https://mbounthavong.github.io/MEPS_tutorials_book/
+
