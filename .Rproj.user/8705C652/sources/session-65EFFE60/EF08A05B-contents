@@ -1,0 +1,305 @@
+###########################################################################################
+# Title:        MEPS tutorial - Part 5 - Trend analysis
+# By:           Mark Bounthavong
+# Output:       R 
+# Version:      4.2.3 "Shortstop Beagle"
+# Category:     MEPS
+# Date:         16 November 2023
+# Updated:      19 November 2023
+# Updated by:   Mark Bounthavong
+###########################################################################################
+
+
+################### NOTES ################### 
+## Perform trend analysis with MEPS data
+## 
+##
+##
+##
+############################################# 
+
+
+# Clear environment
+rm(list=ls())
+
+
+# To install MEPS package in R, you need to do a couple of things.
+### Step 1: Install the "devtools" package. 
+#install.packages("devtools")
+
+
+### Step 2: Install the "MEPS" package from the AHRQ MEPS GitHub site. 
+#devtools::install_github("e-mitchell/meps_r_pkg/MEPS")
+
+
+### step 3: Load the MEPS package
+library("MEPS") ## You need to load the library every time you restart R
+
+### Step 4: Load the other libraries
+library("survey")
+library("foreign")
+library("dplyr")
+library("ggplot2")
+library("questionr") # remotes::install_github("juba/questionr")
+library("lspline")  # devtools::install_github("mbojan/lspline", build_vignettes=TRUE)
+library("ggeffects") # remotes::install_github("strengejacke/ggeffects")
+library("margins")
+library("gtsummary") # remotes::install_github("ddsjoberg/gtsummary")
+library("sjPlot") # plot marginal effects ("plot_model" function)
+
+
+# There are two ways to load data from AHRQ MEPS website:
+#### Method 1: Load data from AHRQ MEPS website
+hc2021 = read_MEPS(file = "h233")
+hc2020 = read_MEPS(file = "h224")
+hc2019 = read_MEPS(file = "h216")
+hc2018 = read_MEPS(file = "h209")
+hc2017 = read_MEPS(file = "h201")
+hc2016 = read_MEPS(file = "h192")
+
+
+#### Method 2: Load data from AHRQ MEPS website
+hc2021 = read_MEPS(year = 2021, type = "FYC")
+hc2020 = read_MEPS(year = 2020, type = "FYC")
+hc2019 = read_MEPS(year = 2019, type = "FYC")
+hc2018 = read_MEPS(year = 2018, type = "FYC")
+hc2017 = read_MEPS(year = 2017, type = "FYC")
+hc2016 = read_MEPS(year = 2016, type = "FYC")
+
+
+## Change column names to lowercase
+names(hc2021) <- tolower(names(hc2021))
+names(hc2020) <- tolower(names(hc2020))
+names(hc2019) <- tolower(names(hc2019))
+names(hc2018) <- tolower(names(hc2018))
+names(hc2017) <- tolower(names(hc2017))
+names(hc2016) <- tolower(names(hc2016))
+
+
+# We need the linkage file with the appropriate stratum of the primary sampling unit (STRA9621) and primary sampling unit (PSU9621). (Note: Each year, the linkage file sampling unit name changes)
+linkage = read_MEPS(type = "Pooled linkage") 
+names(linkage) <- tolower(names(linkage)) # change variable name to lower case
+
+
+
+# Select specific variables
+
+### 2021
+hc2021p = hc2021 %>%
+  rename(
+    perwt = perwt21f,
+    totexp = totexp21) %>%
+  select(
+    dupersid, 
+    panel, 
+    varstr, 
+    varpsu,
+    perwt,
+    sex,
+    totexp)
+hc2021p$year <- 2021
+
+### 2020
+hc2020p = hc2020 %>%
+  rename(
+    perwt = perwt20f,
+    totexp = totexp20) %>%
+  select(
+    dupersid, 
+    panel, 
+    varstr, 
+    varpsu,
+    perwt,
+    sex,
+    totexp)
+hc2020p$year <- 2020
+
+
+### 2019
+hc2019p = hc2019 %>%
+  rename(
+    perwt = perwt19f,
+    totexp = totexp19) %>%
+  select(
+    dupersid, 
+    panel, 
+    varstr, 
+    varpsu,
+    perwt,
+    sex,
+    totexp)
+hc2019p$year <- 2019
+
+### 2018
+hc2018p = hc2018 %>%
+  rename(
+    perwt = perwt18f,
+    totexp = totexp18) %>%
+  select(
+    dupersid, 
+    panel, 
+    varstr, 
+    varpsu,
+    perwt,
+    sex,
+    totexp)
+hc2018p$year <- 2018
+
+### 2017
+hc2017p = hc2017 %>%
+  rename(
+    perwt = perwt17f,
+    totexp = totexp17) %>%
+  select(
+    dupersid, 
+    panel, 
+    varstr, 
+    varpsu,
+    perwt,
+    sex,
+    totexp)
+hc2017p$year <- 2017
+
+### 2016
+hc2016p = hc2016 %>%
+  rename(
+    perwt = perwt16f,
+    totexp = totexp16) %>%
+  select(
+    dupersid, 
+    panel, 
+    varstr, 
+    varpsu,
+    perwt,
+    sex,
+    totexp)
+hc2016p$year <- 2016
+
+
+# Merge data and adjust the person weight by 6 years
+pool_data = bind_rows(hc2021p, 
+                      hc2020p,
+                      hc2019p,
+                      hc2018p,
+                      hc2017p,
+                      hc2016p) %>%
+  mutate(poolwt = perwt / 6)
+
+
+# Reduce the linkage file to only include dupersid, panel, stra9621, psu9621
+linkage_file = linkage %>%
+  select(dupersid, panel, stra9621, psu9621)
+
+# Merge link file with main data
+pool_data_linked = left_join(pool_data,
+                             linkage_file, 
+                             by = c("dupersid", "panel"))
+describe(pool_data_linked)
+
+# Create factor variables:
+### MALE
+pool_data_linked$male[pool_data_linked$sex == 1] = 1
+pool_data_linked$male[pool_data_linked$sex == 2] = 0
+table(pool_data_linked$male)
+pool_data_linked$male <- factor(pool_data_linked$male, levels = c(0, 1))
+class(pool_data_linked$male)
+levels(pool_data_linked$male)
+
+### YEAR
+pool_data_linked$year <- factor(pool_data_linked$year, levels = c(2016, 2017, 2018, 2019, 2020, 2021))
+class(pool_data_linked$year)
+levels(pool_data_linked$year)
+
+
+################################# SURVEY ################################# 
+
+# Set the survey options
+options(survey.lonely.psu = "adjust")
+options(survey.adjust.domain.lonely = TRUE)
+
+
+# Define the survey design
+survey_design = svydesign(
+  id = ~psu9621,
+  strata = ~stra9621,
+  weights = ~poolwt,
+  data = pool_data_linked,
+  nest = TRUE)
+
+
+
+################################ TREND ANALYSIS ################################ 
+
+# Plot total expenditures over time (Load the "questionr" package to use "ggsurvey")
+ggsurvey(survey_design) +
+  aes(x = year, y = totexp, group = factor(male), color = factor(male)) +
+  stat_summary(fun = "mean", geom = "point", size = 5) + 
+  stat_summary(fun = "mean", geom = "line", size = 1) 
+  
+
+# Survey-weight GLM model with interaction term
+survey_model <- svyglm(totexp ~ factor(male) + factor(year) + factor(male):factor(year), survey_design)
+summary(survey_model)
+
+# Summary table with 95% CI
+round(
+  cbind(
+    summary(survey_model, df.resid = degf(survey_model$survey.design))$coef, 
+    confint(survey_model, df       = degf(survey_model$survey.design))
+  ), 4)
+
+
+# Use gtsummary to generate a clean summary table.
+survey_model %>%
+  tbl_regression(intercept = FALSE, 
+                 estimate_fun = function(x) style_sigfig(x, digits = 3),
+                 pvalue_fun = function(x) style_sigfig(x, digits = 3)) %>%
+  modify_caption("Survey-weighted linear regression")
+
+
+# Average marginal effects
+margins0 <- margins(survey_model, type = "response", design = survey_design)
+summary(margins0)
+margins_summary(survey_model, design = survey_design)
+
+# Equivalent to Stata's margin, dydx(sex) at(year = 2016:2021)
+margins1 <- margins(survey_model, type = "response", design = survey_design, at = list(year = c(2016, 2017, 2018, 2019, 2020, 2021)), variables = "male")
+summary(margins1)
+
+# Equivalent to Stata's margin, dydx(year), at(male = 0:1)
+margins2 <- margins(survey_model, type = "response", design = survey_design, at = list(male = 0:1), variables = "year")
+summary(margins2)
+
+margins3 <- margins(survey_model, type = "response", design = survey_design, at = list(male = c("0", "1"), year = c("2016", "2017", "2018", "2019", "2020", "2021")))
+summary(margins3)
+
+
+
+
+
+
+# Plot the marginal effects
+plot_model(survey_model, type = "pred", terms = c("year", "male"), dot.size = 4., line.size = 1)
+
+# Plot the predicted values
+fit.dataframe <- ggpredict(survey_model, terms = c("year", "male"), design = survey_design)
+fit.dataframe
+
+ggplot(fit.dataframe, aes(x, predicted, colour = group)) +
+  geom_line(size = 1.5) +
+  geom_point(size = 5) + 
+  labs(
+    x = "Year",
+    y = "Total healthcare costs",
+    colour = get_legend_title(fit.dataframe)
+  )
+
+
+
+# Acknowledgements
+# ggeffect: https://strengejacke.github.io/ggeffects/reference/ggpredict.html
+
+# margins: https://cran.r-project.org/web/packages/margins/vignettes/Introduction.html
+# margins GitHub site: https://github.com/leeper/margins
+# marginaleffects GitHub site: https://marginaleffects.com/articles/alternative_software.html
+

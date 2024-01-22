@@ -1,0 +1,1947 @@
+--- 
+title: "MEPS tutorials"
+author: "Mark Bounthavong"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography:
+- book.bib
+- packages.bib
+url: https://mbounthavong.github.io/MEPS_tutorials_book/
+description: This is a collection of MEPS tutorials.
+link-citations: yes
+github-repo: mbounthavong/MEPS_tutorials_book
+---
+
+# About {-} 
+This is a collection of tutorials that use data from the Agency for Healthcare Research and Quality (AHRQ) [Medical Expenditure Panel Survey (MEPS)](https://meps.ahrq.gov/mepsweb/). 
+
+These tutorials use [R](https://cran.r-project.org/) and [RStudio](https://posit.co/products/open-source/rstudio/) for data loading, manipulation, analysis, and presentation. 
+
+
+## Book link {-}
+The GitHub link to the MEPS tutorials collection: https://mbounthavong.github.io/MEPS_tutorials_book/
+
+
+## Table of contents {-}
+Chapter [1](#intro) provides an introduction on how to load and import MEPS data into R.
+
+Chapter [2](#merging) is an instruction on how to merge various MEPS data files.
+
+Chapter [3](#weights) focuses on applying weights to the population.
+
+Chapter [4](#clnk) using condition-event link file
+
+Chapter [5](#trends) simple trend analysis with linear models
+
+Chapter [6](#itsa) interrupted time series analysis
+
+Chapter [7](#notes) helpful notes
+
+Further chapters are forthcoming.
+
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```
+
+<!--chapter:end:index.Rmd-->
+
+# Loading MEPS data into R {#intro}
+
+## Introduction
+The Agency for Healthcare Research and Quality (AHRQ) [Medical Expenditure Panel Survey (MEPS)](https://www.meps.ahrq.gov/mepsweb/) is a set of data on U.S. households about their healthcare expenditures. It includes data on the individual / household demographics, socioeconomic status, insurance coverage, and healthcare expenditures. Healthcare expenditures include data on health-related spending, medical conditions, prescriptions, and utilization (e.g., number of office-based visits). MEPS draws upon a nationally representative subsample from the [National Health Interview Survey](https://www.cdc.gov/nchs/nhis/index.htm?CDC_AA_refVal=https%3A%2F%2Fwww.cdc.gov%2Fnchs%2Fnhis.htm), which is conducted by the [National Center for Health Statistics](https://www.cdc.gov/nchs/index.htm). Hence, MEPS provides researchers with the ability to generate estimates for the representative U.S. population. 
+
+## MEPS Data
+MEPS data are located on their website in their [data files page](https://www.meps.ahrq.gov/mepsweb/data_stats/download_data_files.jsp). You can find data from 1996 to the most recent available year (during the writing of this tutorial, 2020 was the latest release).
+
+```{r, echo = FALSE, out.width = "100%", fig.cap = "Figure 1 - Location of MEPS data files"}
+knitr::include_graphics("Figure 1.jpg")
+```
+
+The MEPS data files include the [Full-Year Consolidated Data files](https://www.meps.ahrq.gov/mepsweb/data_stats/download_data_files_detail.jsp?cboPufNumber=HC-224), which is the calendar-year summary of the different longitudinal panels. The Full-Year Consolidated Data files contain information on the annual healthcare expenditures by the type of care; it contains data on spending, insurance coverage, health status, patient satisfaction, and several health conditions. The Full-Year Consolidated Data files also contains information from several surveys (e.g,. Diabetes Care Survey). 
+
+
+```{r, echo = FALSE, out.width = "100%", fig.cap = "Figure 2 - Full-Year Consolidated Data files and other data types"}
+knitr::include_graphics("Figure 2.jpg")
+```
+
+## Load MEPS data into R
+MEPS data can be downloaded onto your local storage and read into a statistical software program such as Stata or R. But you can also communicate directly with the AHRQ MEPS website to load your data rather than having to download it. We will load the Full-Year Consolidated Data file from 2020, which is named `HC-224`. To find out the name of the file, you will need to go MEPS data files site and click on the Full-Year Consolidated Data files. In this page (Figure 2), you can see the data file with the code `HC-224`, which is the Full-Year Consolidated Data file for 2020. When we enter this into our R code, we will use the file name `h224`.
+
+```{r, echo = FALSE, out.width = "100%", fig.cap = "Figure 3 - H224 is the MEP 2020 Full-Year Consolidated Data file."}
+knitr::include_graphics("Figure 3.jpg")
+```
+
+You will need to download and install the [`MEPS` package](https://github.com/e-mitchell/meps_r_pkg). The `MEPS` package will provide tools for you to load and manipulate the MEPS Data files. You will need to have R `devtools` package installed. 
+
+```{r, echo = TRUE}
+## Install the devtools package
+# install.packages("devtools") ## You only need to install this once
+# library("devtools")  ## You will need to reload the MEPS package each time you restart R
+# install_github("e-mitchell/meps_r_pkg/MEPS") ## This will install the MEPS package for R
+```
+
+There are two methods to load MEPS data into R.
+
+Method 1 requires that you know the file name. In this example, the MEPS 2020 Full-Year Consolidated Data file is named `h224`. We will use the `read_MEPS` function to load the MEPS data onto R.
+
+When using Method 2 to load the MEPS data, we don't need to know the file name, but we need to know the year and the data type. For example, for the Full-Year Consolidated Data file, we use the `year = 2020` and `type = "FYC"` option. For this method, we will also use the `read_MEPS` function to the MEPS data onto R.
+
+The `tolower` function is used to change all the variable names from upper case to lower case. MEPS defaults the column names to upper case. I like to change this to lower case because it's easier for me to type. 
+
+```{r, echo = TRUE}
+### Load the MEPS package
+library("MEPS") ## You need to load the library every time you restart R
+
+#### Method 1: Load data from AHRQ MEPS website
+hc2020 = read_MEPS(file = "h224")
+
+#### Method 2: Load data from AHRQ MEPS website
+hc2020 = read_MEPS(year = 2020, type = "FYC")
+
+## Change column names to lowercase
+names(hc2020) <- tolower(names(hc2020))
+```
+
+There are over 1400 variables in the MEPS 2020 Full-Year Consolidated Data file. We can reduce this to the essential variables using the `subset` function. This will generate a smaller data frame that we will call `keep_meps`. The variables that we want to collect are the subject unique identifier (`dupersid`), the survey weights (`varpsu`, `varstr`, `perwt20f`), and the total healthcare expenditures for 2020 (`totexp20`). 
+
+```{r, echo = TRUE}
+### Keep the subject's unique ID, survey weights, and total expenditures
+keep_meps <- subset(hc2020, select = c(dupersid, varpsu, varstr, perwt20f, totexp20))
+
+head(keep_meps) ## View the first six rows of the data frame
+```
+
+Since MEPS uses a complex survey design, these weights are needed to estimate standard errors that are reflective of the representative sample of the U.S. population. We'll learn how to apply these survey weights to the MEPS data files in a future tutorial.
+
+## Conclusions
+Loading MEPS data into R allows us to perform analysis easily and quickly. In this tutorial, you learned how to load MEPS data into R directly from the MEPS website. However, you can also download the MEPS data onto your local storage and use the `setwd` command to set the working directory. 
+
+In future tutorials, we'll learn how to apply the survey weights and perform descriptive analyses using the MEPS data files. 
+
+## Acknowledgements
+There are a lot of tutorials on how to use MEPS data with R. I found the [AHRQ MEPS GitHub page](https://github.com/HHS-AHRQ/MEPS) to be an invaluable resource. 
+
+This is a work in progress, and I may update this in the future. 
+
+<!--chapter:end:01-intro.Rmd-->
+
+# Merging files {#merging}
+
+## Introduction
+We want to merge the Full-Year Consolidated Data file with the Medical Conditions file so that we can identify patients with a diagnosis of diabetes. 
+
+## Load MEPS data
+We need to lead the MEPS Full-Year Consolidated Data file and the Medical Conditions file from 2020. There are two methods to loading MEPS data into R. Method 1 requires you to know the name of the file. For example, the Medical Conditions file from 2020 is named `h222`. In Method 2, you need to know the `type = ` of data you want to load. For example, the Medical Conditions file is named `CONDITIONS`. 
+
+I like to work with column names that are in the lower case, so I used the `tolower` function to change the column names from upper case to lower case. 
+
+```{r, echo = TRUE}
+### Load the MEPS package
+library("MEPS") ## You need to load the library every time you restart R
+
+#### Method 1: Load data from AHRQ MEPS website
+hc2020 = read_MEPS(file = "h224")
+mc2020 = read_MEPS(file = "h222")
+
+#### Method 2: Load data from AHRQ MEPS website
+hc2020 = read_MEPS(year = 2020, type = "FYC")
+mc2020 = read_MEPS(year = 2020, type = "CONDITIONS")
+
+## Change column names to lowercase
+names(hc2020) <- tolower(names(hc2020))
+names(mc2020) <- tolower(names(mc2020))
+```
+
+
+## Merge MEPS data
+Now that we have both the `h224` and `h222` file loaded into R, we can marge these files together. The Full-Year Consolidated Data file contains unique patients (e.g., each row is a unique patient); hence, the unique identifier `dupersid` is not repeatable. Figure 1 illustrates an example of a table with each row as a unique subject. Note how the `dupersid` does not repeat.
+
+```{r, echo = FALSE, out.width = "80%", fig.cap = "Figure 1 - Example table with unique patients."}
+knitr::include_graphics("Figure 2_1.jpg")
+```
+
+However, in the Medical Conditions file, the rows are for the number of unique diagnosis grouped by the patient. In other words, the Medical Conditions file will contain repeated `dupersid` for each diagnosis. For example, a person can have 5 diagnosis grouped by their `dupersid`. In Figure 2, we have an example table with a subject `dupersid = 12345` who has five diagnosis (`icd10cdx`). 
+
+```{r, echo = FALSE, out.width = "100%", fig.cap = "Figure 2 - Example table where the unique patient identifier repeats."}
+knitr::include_graphics("Figure 2_1.jpg")
+```
+
+When we merge the Full-Year Consolidated Data file (which is unique to the `dupersid`) with the Medical Conditions file (which has repeatable `dupersid`), we will merge using a 1 to many merge (`Figure 3a`). `Figure 3a` illustrates the merge between the unique subject-level table to the repeatable subject-level table. 
+
+```{r, echo = FALSE, out.width = "100%", fig.cap = "Figure 3a - Merging tables (1 to many)."}
+knitr::include_graphics("Figure 2_3a.jpg")
+```
+
+But we also want to make sure that we include all the patients in the Full-Year Consolidated Data file. Not all patients will have a diagnostic code, so we need to be careful that we don't accidentally drop them from the query. `Figure 3b` illustrates our intention to merge all the data from the Full-Year Consolidated Data file with some of the data from the Medical Conditions file. 
+
+```{r, echo = FALSE, out.width = "100%", fig.cap = "Figure 3b - Merging tables with all patients in the Full-Year Consolidated Data file and some of the data from the Medical Conditions file."}
+knitr::include_graphics("Figure 2_3b.jpg")
+```
+
+Now that we understand how we want to merge the data, we can proceed to write the code. 
+
+There are two methods to merge the data files.
+
+**Method 1:** We use the `merge` function to merge the two MEPS data files. The `by = ` option is where we enter the matching variable `dupersid`. We will call the merged data set `total`. Using the ``merge` function, we are telling R that we want to do a 1 to many match between the Full-Year Consolidated Data file and the Medical Conditions file using the `dupersid` as the matching variable. We have to include the `all.x = TRUE` argument because we want to make sure we include the patients without any diagnostic codes. 
+
+```{r, echo = TRUE}
+## MERGE data - Medical conditions and household component
+# merge two data frames by ID; there are two methods to do this:
+
+#### Method 1: Native R function; Note: all.x means that we pull all dupersid, even the ones that don't have a medical condition)
+total <- merge(hc2020, mc2020, by = "dupersid", all.x = TRUE)
+```
+
+**Method 2:** We use the `left_join` function from the `dplyr` package to merge the two MEPS data files. The `by = ` option is where we enter the matching variable `dupersid`. We will call the merged data set `total`. Using the `left_join` function, we are telling R that we want to do a 1 to many match between the Full-Year Consolidated Data file and the Medical Conditions file using the `dupersid` as the matching variable. The `left_join` function is based on the SQL language syntax and operates in the same manner. 
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+#### Method 2: Use SQL syntax (left_join)
+library("dplyr")
+total <- left_join(hc2020, mc2020, by = "dupersid")
+```
+
+Once the two data files are merged, we will have a data frame with repeatable `dupersid`. Notice that the `totexp20` variable from Table A is merged along with the `icd10` variable from Table B. 
+
+```{r, echo = FALSE, out.width = "100%", fig.cap = "Figure 4 - Merging data from Table A to Table B."}
+knitr::include_graphics("Figure 2_4.jpg")
+```
+
+## Reduce dataframe to a few variables
+Our `total` dataframe has 1481 variables and 80,802 observations. We want to make this dataframe manageable, so we'll create a limited dataframe with only the variables we're interested in. To do this, we'll use the `subset()` function. 
+
+For this exercise, we'll keep the `dupersid`, `varpsu.x`, `varsry.x`, `perwt20f.x`, and `icd10cdx` variables by using the `subset()` function. We'll call our reduced dataframe `keep_mep2`. (Note: The `*.x` indicates the table on the left. We want to keep the `varpsu`, `varstr`, and `perwt20f` from the `hc2020` table. The `mc2020` table has duplicate variables that are denoted by `*.y`.)
+
+```{r, echo = TRUE}
+keep_meps2 <- subset(total, select = c("dupersid", "varpsu.x", "varstr.x", "perwt20f.x", "icd10cdx"))
+```
+
+
+## Add an indicator for a specific ICD10 diagnostic code
+Our data frame has multiple rows grouped by the patient's id (`dupersid`); these rows are based on the various ICD-10 diagnostic codes. For example, patient `12345` has 5 ICD-10 diagnostic codes; hence, they have 5 rows (`Figure 4`). 
+
+Suppose we want to generate a binary indicator to identify patients with an ICD-10 diagnosis for diabetes (`E11`). In our example (`Figure 4`), patient `12345` has an ICD10 code for diabetes (`E11`). 
+
+We can create an indicator variable that will be unique to the patient for having diabetes. What we want to see if a new variable that identifies a patients with the specific ICD-10 code of interest. `Figure 5` illustrates the indicator variable for diabetes as an additional column `diabetes_indicator`. 
+
+```{r, echo = FALSE, out.width = "100%", fig.cap = "Figure 5 - Indicator variable for diabetes."}
+knitr::include_graphics("Figure 2_5.jpg")
+```
+
+We create the indicator and call it `diabetes`, which is defined as `icd10cdx == "E11"`. We will code this as `0` for no diabetes and `1` for diabetes. Then, we count the number of time a patient as `E11` in their `icd10cdx` column. I added the following option to the code (` | is.na(total$icd10cdx)`) because I want to make sure that all patients in the `total` table that do not have an ICD-10 code for `E11` is coded as `0`. There may be some patients that have `NA` or missing data in the `icd10cdx` variable. If the `icd10cdx` value is `NA`, this may not be coded with a `0`. Hence, we have to add the ` | is.na(total$icd10cdx` code to ensure that we get a value of `0`. 
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+## Change to unique subject (each row is a unique subject)
+#### Generate a variable to identify diabetes diagnosis for repeated rows
+library("tidyverse")  ## Load tidyverse
+
+keep_meps2$diabetes[total$icd10cdx != "E11" | is.na(total$icd10cdx)] = 0
+keep_meps2$diabetes[total$icd10cdx == "E11"] = 1
+
+table(keep_meps2$diabetes) ## Visualize the number of patients with diabetes and no diabetes
+
+### This code chunk calculates the number of times E11 appears for a unique patient
+keep_meps2 <- keep_meps2 %>%
+  group_by(dupersid) %>%
+  mutate(diabetes_indicator = sum(diabetes == "1", na.rm = TRUE)) %>%
+  ungroup
+table(keep_meps2$diabetes_indicator)
+```
+
+According to our results, there were 17,295 events where a patient had one diagnostic code for `E11` and 939 events where a patient had two diagnostic codes for `E11`. How did this occur? MEPS public files only list the first three digits of the ICD-10 code to protect the identity of the patient. The ICD-10 diagnostic code has more digits beyond the first three. For example, an ICD-10 diagnosis for Type 2 diabetes with diabetic chronic kidney disease is `E11.22`. Hence, there will be patients with unique ICD-10 codes that may appear identical because only the first three digits are present in the MEPS public files. 
+
+In our example, we have patients with 1 and 2 ICD-10 diagnostic codes for `E11`. We would like to create a binary indicator of diabetes, so we need to take the current information and transform the variable `diabetes` in the `keep_meps` dataframe into a new variable that only has `0` and `1`. 
+
+We can do this by combining the `mutate` function with the `ifelse` function. See the code below:
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+keep_meps2 <- keep_meps2 %>% 
+  group_by(dupersid) %>%
+  mutate(diabetes_binary = ifelse(diabetes_indicator >= 1, 1, 0), na.rm = TRUE) %>%
+  ungroup
+table(keep_meps2$diabetes_binary)
+```
+
+Now, we have a new binary indicator variable. The `diabetes_binary` variable is coded `1` if the patient has the `E11` diagnostic code and `0` if the patient does not. 
+
+## Collapse dataframe to a single unique patient
+But since this is a dataframe with duplicated patients, we want to collapse this into a dataframe where each row is a single unique patient.
+
+Since a lot of the variables in the dataframe are the same when grouped by the unique `dupersid`, we can estimate the mean and get the same value. For example, let's look at `Figure 5` again. For `dupersid == 12345`, there are five values for `totexp20`, which are:
+
+* `5000` when `icd10` is `E11`, 
+
+* `5000` when `icd10` is `B20`, 
+
+* `5000` when `icd10` is `F21`, 
+
+* `5000` when `icd10` is `Z21`, and
+
+* `5000` when `icd10` is `M05`
+
+Averaging the `totexp20` for `dupersid == 12345` will result in a value of `5000`.
+
+Hence, when we average the diabetes `diabetes_binary` variable, we will get a value of `1` or `0`. 
+
+Using this knowledge, we can collapse our data to a single `dupersid` and remove the duplicates. 
+
+The `icd10cdx` variable will yielded `NA` because it can't be collapsed numerically due to its `string` data type.
+
+$~$
+
+There are two methods to collapse the dataframe to unique patients:
+
+**Method 1:** Use the `dplyr` package and the `summarize_all` function with the `list()` function. 
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+#### Collapse the repeated rows to a single unique subject
+meps_per <- keep_meps2 %>% 
+  group_by(dupersid) %>%
+  summarize_all(list(mean))
+
+table(meps_per$diabetes_binary)
+```
+
+$~$
+
+**Method 2:** Use the `summarise` function. This method will generate a dataframe with two variables (`dupersid` and `diabetes_binary2`). 
+```{r, echo = TRUE, message = FALSE, warning= FALSE}
+meps_per2 <- keep_meps2 %>%  ### An alternative method but only generates two variables (dupersid and diabetes_binary2)
+  group_by(dupersid) %>%
+  summarise(diabetes_binary2 = mean(diabetes_binary)) %>%
+  as.data.frame()
+
+table(meps_per2$diabetes_binary2)
+```
+
+For the rest of the tutorial, I'll use Method 1 because I want to keep the other variables. 
+
+`Figure 6` illustrates what our dataframe should look like after we collapsed the data to a single unique patient. 
+
+```{r, echo = FALSE, out.width = "100%", fig.cap = "Figure 6 - Collapse rows to a unique patient with a diabetes indicator."}
+knitr::include_graphics("Figure 2_6.jpg")
+```
+
+## Conclusions
+With this tutorial, we've learned how to merge two data files from MEPS and collapse them to a dataframe of unique patients. MEPS has additional data files that contain  information that might be important for your work. For example, we can use these methods to merge the Prescription Drug file and create indicators for patients who are on opioids. However, you will need to carefully read through the documentation for each data file to understand what kind of information they contain. Feel free to explore using these strategies to merge additional MEPS data files to your existing cohort. 
+
+
+## Acknowledgements
+There are a lot of tutorials on how to use MEPS data with R. I found the [AHRQ MEPS GitHub page](https://github.com/HHS-AHRQ/MEPS) to be an invaluable resource. 
+
+[David Ranzolin](https://daranzolin.github.io/) has a great [presentation](https://rstudio-pubs-static.s3.amazonaws.com/116317_e6922e81e72e4e3f83995485ce686c14.html#/2) on how to use the `mutate` function in R. I liked the examples he used, and the presentation is succint and informative. 
+
+Another great resource is by [Joachim Schork](https://statisticsglobe.com/joachim-schork/), author and founder of [Statistics Globe](https://statisticsglobe.com/) who wrote a great [blog](https://statisticsglobe.com/sum-duplicate-rows-r) about collapsing data on a unique identifier.
+
+I learned how to use the `left_join` function from this [blog](https://www.infoworld.com/article/3454356/how-to-merge-data-in-r-using-r-merge-dplyr-or-datatable.html) by [Sharon Machlis](https://www.infoworld.com/author/Sharon-Machlis/) on [InfoWorld](https://www.infoworld.com). She uses `dplyr` to invoke the `left_join` function which is a based on `SQL` language. 
+
+This is a work in progress, and I may update this in the future. 
+
+
+<!--chapter:end:02-merging.Rmd-->
+
+# Applying weights {#weights}
+
+## Introduction
+The [Medical Expenditure Panel Survey (MEPS)](https://www.meps.ahrq.gov/mepsweb/) is based on a complex survey design. Hence, it is necessary to apply survey weights to generate estimates that are representative of the United States (US) population. The weights take into account the stratification, clustering, sampling, and non-response based on the Current Population Survey. Although you can perform descriptive and complex analyses without the weights, they will not provide you with accurate standard errors of the population. Rather, not applying the weights will only yield standard errors for the sample. 
+
+## Types of weights
+In MEPS, there are three types of weights that are critical for most descriptive and multivariate analyses: person weight (`perwtXXf`), stratum (`varstr`), and cluster (`varpsu`). The `XX` is replaced by the year of the survey. For example, the person weight in 2020 is labelled as `perwt20f`. 
+
+## Loading the data
+Let's use the MEPS Full-Year Consolidated File from 2020. From our previous tutorial, you can load data using the `MEPS` library function `read_MEPS`. There are two methods that you can use to load data into R. 
+
+```{r, echo = TRUE}
+### Load the MEPS package
+library("MEPS") ## You need to load the library every time you restart R
+
+#### Method 1: Load data from AHRQ MEPS website
+hc2020 = read_MEPS(file = "h224")
+
+#### Method 2: Load data from AHRQ MEPS website
+hc2020 = read_MEPS(year = 2020, type = "FYC")
+
+## Change column names to lowercase
+names(hc2020) <- tolower(names(hc2020))
+```
+
+Once the data has been loaded, we can look at how many variables there are. 
+
+```{r, echo = TRUE}
+## The number of columns represents the number of variables in the hc2020 dataframe. 
+ncol(hc2020)
+```
+
+We have over 1400 variable. This is a very large dataframe. We can reduce this to a manageable size by keeping only the variables that are important. Let's keep the unique patient identifier (`dupersid`), weights (`perwt20f`, `varstr`, and `varpsu`), and the total expenditures (`totexp20`). 
+
+```{r, echo = TRUE}
+## Create a smaller dataframe
+keep_hc2020 <- subset(hc2020, select = c(dupersid, perwt20f, varstr, varpsu, totexp20, sex, povcat20))
+head(keep_hc2020)
+```
+
+We can add labels to the `sex` variable where `1 = male` and `2 = female`.
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+keep_hc2020$sex <- factor(keep_hc2020$sex, 
+                          levels = c(1, 2),
+                          labels = c("1 - Male", "2 - Female"))
+```
+
+## Perform descriptive analysis
+Now that we have a smaller dataframe with the variables of interest, let's apply the survey weights to some descriptive analysis. 
+
+Suppose you were interested in the average age of the cohort. You will need to apply the survey weights to generate the mean and standard deviation. The `survey` package comes with the `svydesign` function, which uses the survey weights in the Full-Year Consolidated File data and applies them to the cohort in preparation for analyses. 
+
+First, you will need to set the options to `adjust`, which centers the single-PSU strata arund the grand mean rather than the stratum mean. With MEPS data, we are using single-PSU (or "lonely" PSU), which is used to estimate the variance by calculating the difference of the sum of the statum's PSU and the average statum's PSU. The, we use the `svydesign` function to generate a complex survey design dataset (which we will call `mepsdsgn`) for analysis by applying the survey weights. 
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+## Load the "survey" package
+library("survey")
+
+## Apply the survey weights to the dataframe using the svydesign function
+options(survey.lonely.psu = 'adjust')
+
+mepsdsgn = svydesign(
+  id = ~varpsu,
+  strata = ~varstr,
+  weights = ~perwt20f,
+  data = keep_hc2020,
+  nest = TRUE)
+```
+
+Once the survey weights have been applied, we can use the `survey` functions to perform some descriptive analysis on the `mepsdsgn` data.
+
+First, let's see how many patients we have that is representative of the US population by sex. We use the `svytable` function to generate the weight sample for males and females. Adding these together will yield the weighted sample of the US population.
+
+```{r, echo = TRUE}
+## Weighted sample of the population stratified by sex
+svytable(~sex, design = mepsdsgn)
+```
+
+Using the survey weights, there are 160,960,989 males and 167,584,308 females. In total, there are 328,545,297 weighted subjects in the `mepsdsgn` data. 
+
+Let's move on and estimate the average total expenditures for the total sample.  
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+## Estimate the weighted mean total expenditure for the sample
+svymean(~totexp20, design = mepsdsgn)
+```
+
+The `svymean` function generates the appropriate average and standard error (SE) of the total sample that is representative of the US population. In 2020, the average total expenditure was \$6266 (SE, 164). 
+
+In our `mepsdsgn` data, we have sex, which is a binary variable. Let's estimate the total expenditures between males and females in the MEPS Full-Year Consolidated data. To estimate the mean between two groups, we'll need to use the `svyby` function along with the `svymean` function. 
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+## Estimate the weight mean total expenditure for males and females
+svyby(~totexp20, ~sex, mepsdsgn, svymean)
+```
+
+The average total expenditures for male and female are \$5861 (SE, 244) and \$6655 (SE 205), respectively. 
+
+We can perform crosstabulations with the `svytable` function. Let's look at the distribution of males and females across various poverty categories. In the MEPS codebook, poverty category are groups as: 1 = Poor/Negative, 2 = Near Poor, 3 = Low Income, 4 = Middle Income, and 5 = High Income. 
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+## Crosstab sex and poverty category
+svytable(~sex + povcat20, design = mepsdsgn)
+```
+
+To generate the proportions, you will need to use `prop.table`. We add the `margin = 1` option to calculate the column total.
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+prop.table(svytable(~sex + povcat20, design = mepsdsgn), margin = 1) ### margin = 1 calculates the column total.
+```
+
+We can combine these into a contingency table using the `tbl_svysummary` function from the `gtsummary` package. We will also use the `tidyverse` package to manipulate the data more easily. 
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+## Load libraries 
+library("tidyverse")
+library("gtsummary")
+
+## Contingency table (crosstabulations between sex and poverty category)
+mepsdsgn %>%
+  tbl_svysummary(by = sex, percent = "column", include = c(povcat20))
+```
+
+Based on these weighted sample numbers, there are more males who are in the High Income category compared to females (46% versus 42%). 
+
+## Conclusions
+The MEPS data uses weights to generate estimations that are reflective of the US population. The `survey` package from R will allow us to apply these weights using the `svydesign` function, which requires us to enter the patient weight, stratum, and cluster values. Once these are applied, we can use the suite of functions from the `survey` package to perform descriptive analysis on the population. The `svymean` generates the population average and the `svytable` generates the population frequencies. Having a good understanding of how these weights are used with MEPS data will allow you to generate estimates of the population in your epidemiology work. 
+
+## Acknowledgements
+The `survey` package and functions were developed by [Thomas Lumley](https://profiles.auckland.ac.nz/t-lumley) and can be found [here](https://www.rdocumentation.org/packages/survey/versions/4.1-1).
+
+The `gtsummary` package and instructions are developed by Daniel D. Sjoberg, Joseph Larmarange, Michael Curry, Jessica Lavery, Karissa Whiting, Emily C. Zabor, which can be found at their [website](https://www.danieldsjoberg.com/gtsummary/reference/tbl_svysummary.html).
+
+This is a work in progress, and I expect to make updates in the future. 
+
+
+<!--chapter:end:03-weight.Rmd-->
+
+# Using condition-event link (`CLNK`) file {#clnk}
+
+## Introduction
+The Agency for Healthcare Research and Quality (AHRQ) Medical Expenditure Panel Survey (MEPS) categorizes expenditures into different components. Healthcare expenditures (e.g., costs and utilization) are provided for each individual respondent in MEPS. For instance, healthcare expenditures are categorized as total healthcare expenditures (`totexp21`), office-based expenditures (`obvexp21`), outpatient expenditures (`opvexp21`), inpatient expenditures (`iptexp21`), and prescription expenditures (`rxexp21`) to name a few. Reading the long but detailed [documentation](https://meps.ahrq.gov/data_stats/download_data/pufs/h233/h233doc.shtml) is a good way to learn more about the different expenditure categories. Moreover, you can also review **Appendix 3** of the documentation (see Figure below). 
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, out.width = "100%", fig.cap = "MEPS Appendix 3 - Expenditure variables"}
+knitr::include_graphics("Figure 4_1 - Appendix 3.png")
+```
+
+These costs and utilization provide information about the annual expenditures associated with each category for each individual respondent. But this doesn't provide <u>disease-specific expenditures</u>. For example, an individual may have an annual office-based visits healthcare cost of \$10,000, but part of this costs may be due to a specific disease such as migraine. How much of the \$10,000 is due to migraine-related office-based visits? One can answer this question using the [condition-event link (`CLNK`) file](https://meps.ahrq.gov/data_stats/download_data/pufs/h229i/h229idoc.shtml). 
+
+The `CLNK` file has a unique variable that can be used to link each record on the [Medical Conditions file](https://meps.ahrq.gov/data_stats/download_data_files_detail.jsp?cboPufNumber=HC-231) with event files from the respective year (e.g., `HC-229D` through `HC-229H`). One of these event files that we're interested in is the office-based event file (`HC-229G`). The `CLNK` file contains 6 variables: 
+
+* `dupersid` - 10-digit unique identifier
+
+* `condidx` - 13-digit unique identifier for a condition
+
+* `evntidx` - 16-digit unique identifier for each event
+
+* `clnkidx` - 29-digit unique identifier for each record; combines `condidx` and `evntidx`
+
+* `eventype` - indicates the type of event record (see Figure)
+
+* `panel` - indicate the panel when the interview occurred
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, out.width = "100%", fig.cap = "Type of event record (`eventype`)"}
+knitr::include_graphics("Figure 4_2.png")
+```
+
+Using these files, we can acquire disease-specific expenditures from MEPS data, which may be important for those of us who are interested in these expenditures. 
+
+## Motivating example - Migraine-specific expenditures
+In this motivating example, we will review how to use MEPS to find the office-based expenditures and inpatient expenditures specific to migraine.
+
+### Part 1 - Setup
+We will need to install several packages. The [AHRQ MEPS GitHub site](https://github.com/HHS-AHRQ/MEPS) is a great source for documents, tutorials, codes, and updates. I learned a ton going through their exercises, and a lot of the code you'll see in this tutorial come from those resources. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# To install "MEPS" package in R, you need to do a couple of things.
+### Step 1: Install the "devtools" package. 
+#install.packages("devtools")
+
+
+### Step 2: Install the "MEPS" package from the AHRQ MEPS GitHub site. 
+#devtools::install_github("e-mitchell/meps_r_pkg/MEPS")
+
+
+### Step 3: Load the MEPS package
+library("MEPS") ## You need to load the library every time you restart R
+
+### Step 4: Load the other libraries
+library("survey")
+library("foreign")
+library("tidyverse")
+library("psych")
+```
+
+Next, we set the global options.
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Set global options
+options(survey.lonely.psu = "adjust") # survey option for lonely PSUs
+options(dplyr.width = Inf) # Columns are not truncated
+options(digits = 10) # Do not use scientific notation for large number
+```
+
+Once that's done, we will download the data directly from the MEPS site using the `read_MEPS` function. There are two ways to do this:
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+
+# There are two ways to load data from AHRQ MEPS website:
+#### Method 1: Load data from AHRQ MEPS website
+hc2021 = read_MEPS(file = "h233") # Full-year consolidated file
+ob2021 = read_MEPS(file = "h229g") # Office-based visits
+inpat2021 = read_MEPS(file = "h229d") # Inpatient stays
+cond2021 = read_MEPS(file = "h231") # Medical conditions file
+clnk2021 = read_MEPS(file = "h229IF1") # Condition-Event Link File (CLNK)
+
+
+#### Method 2: Load data from AHRQ MEPS website
+hc2021 = read_MEPS(year = 2021, type = "FYC") # Full-year consolidated file
+ob2021 = read_MEPS(year = 2021, type = "OB") # Office-based visits
+inpat2021 = read_MEPS(year = 2021, type = "IP") # Inpatient stays
+cond2021 = read_MEPS(year = 2021, type = "COND") # Medical conditions file
+clnk2021 = read_MEPS(year = 2021, type = "CLNK") # Condition-Event Link File (CLNK)
+```
+
+After the data are loaded, you can change the column names from upper case to lower case.
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+## Change column names to lowercase
+names(hc2021) <- tolower(names(hc2021))
+names(ob2021) <- tolower(names(ob2021))
+names(inpat2021) <- tolower(names(inpat2021))
+names(cond2021) <- tolower(names(cond2021))
+names(clnk2021) <- tolower(names(clnk2021))
+```
+
+Each of these tables will have a lot of variables. To make things easier and cleaner, let's reduce the size of the tables to only include the essential variables. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Keep only the variables of interest
+hc2021x = hc2021 %>%
+  select(dupersid, totexp21, obvexp21, iptexp21, perwt21f, varpsu, varstr, sex, racev1x)
+
+ob2021x = ob2021 %>%
+  select(dupersid, evntidx, eventrn, obdateyr, obdatemm, obxp21x, perwt21f, varpsu, varstr)
+
+inpat2021x = inpat2021 %>%
+  select(dupersid, evntidx, eventrn, numnighx, ipxp21x, perwt21f, varpsu, varstr)
+
+cond2021x = cond2021 %>%
+  select(dupersid, condidx, icd10cdx, ccsr1x:ccsr3x)
+```
+
+Next, we want identify migraine condition from the `cond2021x` file, which is the medical conditions file. The CCSR code for migraine is `NVS010` (note: the ICD10 code for migraine is `G42`, but we won't need it for this example). There are three CCSR columns (`ccsr1x`, `ccsr2x`, `ccsr3x`), and we want to concatenate these into a new column called `all_CCSR` to isolate for migraine. You can find the list of CCSR codes in the [AHRQ MEPS site](https://github.com/HHS-AHRQ/MEPS/blob/master/Quick_Reference_Guides/meps_ccsr_conditions.csv). 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+################################# NOTES ################################# 
+## Use CLNK file to map condition with events
+## CCSR code: https://github.com/HHS-AHRQ/MEPS/blob/master/Quick_Reference_Guides/meps_ccsr_conditions.csv
+## CCSR code for migraine: NVS010
+## ICD10 code for migraine: G43
+######################################################################### 
+
+# Restrict conditions to Migraine only from the conditions file
+### This creates a variable called "all_CCSR" which concatenates the CCSR columns
+### Then, filter() only selects rows with the "NVS010" text in the "all_CCSR" column
+### Finally, this gets saved into the "migraine" object.
+migraine = cond2021x %>% 
+  unite("all_CCSR", ccsr1x:ccsr3x, remove = FALSE) %>% 
+  filter(grepl("NVS010", all_CCSR))
+
+
+# View freq per diagnosis code type (Pretty nice code from AHRQ)
+migraine %>% 
+  count(icd10cdx, ccsr1x, ccsr2x, ccsr3x) 
+```
+
+### Part 2 - Migraine-specific office-based expenditures
+Now that we have our data files set up and prepared, we can begin to identify the migraine-specific office-based expenditures. 
+
+First, we want to isolate the office-based visits events from the `clnk2021` file. According to the figure above, `eventype == 1` is for office-based medical provider visit event. We will save these results into a new object called `ob_events`.
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+############################################
+## OUTPATIENT VISITS
+############################################
+# Select Office-based events from the CLNK file
+ob_events = clnk2021 %>%
+  filter(eventype == 1)
+```
+
+Next, we want to merge the `ob_events` object with the `migraine` object, which contains the migraine-related conditions. We use an `inner_join`, which will only subset rows that matches between the two objects by `dupersid` and `condidx`. This will be saved as a new object called `migraine_lnk`. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Merge migraine diagnosis conditions file with office-based visit file
+migraine_lnk = inner_join(
+  migraine, ob_events,
+  by = c("dupersid", "condidx")
+)
+```
+
+Since the `migraine_lnk` object has duplicate `dupersid` and `condidx`, we want to create an updated dataframe (`migraine_ob_distinct`) that contains unique rows of `dupersid`, `evntidx`, and `eventype`. AHRQ called this process "De-duplicate." We will use this term in our exercise.  
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Select only DISTINCT office-based events ("De-duplicate")
+migraine_ob_distinct = migraine_lnk %>%
+  distinct(dupersid, evntidx, eventype)
+```
+
+Then we merge the `migraine_ob_distinct` dataframe with the `ob2021x` dataframe using the `inner_join` function because we want to only include the rows that are in both dataframes. We use the `mutate` function to generate a new indicator variable called `migrane_ob_visit =1`. This will yield a dataframe that contains the office-based events specific for migraines. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Merge office-based file with distinct office-based CLNK event file
+### Use the inner_join() to merge ob2021x and migraine_lnk_distinct dataframes
+### Then create a new indicator variable called "migraine_ob_visit = 1."
+ob_migraine = inner_join(
+  ob2021x, migraine_ob_distinct) %>%
+  mutate(migraine_ob_visit = 1)
+```
+
+Once that's done, we can merge the `ob_migraine` dataframe with the Full-Year Consolidated (`hc2021x`) dataframe. We create two indiciator variables: `migraine_ob = 1` to capture the total number of migraine-specific office-based visits, and `fyc = 1` to indicate that this is the Full-Year Consolidated file that was merged. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Merge with full-year consolidated file
+### Use the full_join() to keep all the rows from both dataframes.
+### Then create a new object called hc2021_ob_migraine
+### & a new indicator variable called "migraine_ob = 1"
+### & another new indicator variable called "fyc = 1."
+### Note: These are not unique rows (repeated dupersid)
+hc2021_ob_migraine = full_join(
+  ob_migraine %>% mutate(migraine_ob = 1),
+  hc2021x %>% mutate(fyc = 1))
+```
+
+Since this dataframe (`hc2021_ob_migraine`) contains duplicate `dupersid`, we want to create a dataframe where each row reflects a unique `dupersid`. We can do this by using the `group_by` function on specific variables that we know are unique to an individual (`dupersid`, `varstr`, `varpsu`, and `perwt21f`). These are the unique identifier of the individual and their associated stratum and weight. 
+
+We also will summarize the migraine-specific utilization such as office-based visit costs (`obxp21x`) and the total sum of those visits (`migraine_ob_visit`).
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Aggregate to person-level
+### We have to do the estimations for the person-level at this stage
+### We will estimate the total and mean values of the migraine-related expenditures
+### The "migraine_ob" will be used to create an indicator for migraine-related expenditures
+### Need to set NA -> zero.
+per_migraine_ob = hc2021_ob_migraine %>%
+  group_by(dupersid, varstr, varpsu, perwt21f) %>%
+  summarize(
+    avgtotexp_tot               = mean(totexp21),  # average total expenditure
+    totexp_ob                   = sum(obxp21x),    # sum of migraine-specific office-based visits per person
+    avgexp_obvexp               = mean(obvexp21),  # average office-based visits per person
+    totvisit_ob                 = sum(migraine_ob_visit), # sum of migraine-specific office-based visits
+    avgvisit_migraine_ob        = mean(migraine_ob_visit), # average migraine-specific office-based visits
+    avgvisit_migraine_visits_ob = mean(migraine_ob), # average migraine-specific office-based visits
+    migraine_ob                 = max(migraine_ob)) %>% # indicator for migraine-specific expenditures
+    replace_na(
+      list(totexp_ob = 0, totvisit_ob = 0, totvisit_migraine_ob = 0, avgvisit_migraine_ob = 0, avgvisit_migraine_visits_ob = 0, migraine_ob = 0)
+    )
+```
+
+The above code chunk seems intimidating, but there are sensible reasons why it is written this way. See the Figure below for a visual explanation. 
+
+The <u>migraine-specific</u> office-based costs and visits are expenditures that are at the event level denoted by the event identifier `evntidx`. Costs like the total expenditures and office-based costs are at the individual level denoted by the individual identifier `dupersid`. Hence, you will see that at the event level, the <u>migraine-specific</u> office-based costs `obxp21x` differs by events (`evntidx`. Conversely, the office-based costs are the same by individual (`dupersid`).
+
+We need to sum or add up the <u>migraine-specific</u> office-based costs for each individual so that we can collapse the rows. We want to do create a new dataframe where each row is a unique individual denoted by their individual identifier (`dupersid`) and corresponding survey weights (`varstr`, `varpsu`, `perwt21f`).
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, out.width = "100%", fig.cap = "Visual explanation of the code chunk"}
+knitr::include_graphics("Figure 4_3.png")
+```
+
+Once this step is completed, you can check to see that the number of rows from the new dataframe (`per_migraine_ob`) is equal to the number of rows from the Full-Year Consolidated file (`hc2021`). They should be equal. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+
+### QC: Should have the same number as the full-year consolidated file
+nrow(per_migraine_ob) == nrow(hc2021)
+```
+
+Now that you've merged the migraine-specific office-based expenditures with the Full-Year Consolidated file, we can start on repeating this process for the <u>migraine-specific inpatient expenditures</u>. 
+
+
+### Part 3 - Migraine-specific inpatient expenditures
+The code for the migraine-specific inpatient expenditures is similar to the migraine-specific office-based expenditures so I won't go through them step-by-step. However, there are several important differences. 
+
+First, the inpatient event type is `eventype == 4`, which needs to be included when you isolate the event types from the `clnk2021` file. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+
+############################################
+## INPATIENT STAYS
+############################################
+# Inpatient stays events
+inpat_events = clnk2021 %>%
+  filter(eventype == 4)
+
+# QC: Should only have EVENTYPE == 4
+inpat_events %>%
+  count(eventype)
+
+
+# Merge migraine diagnosis file with inpatient stays file
+migraine_lnk_inpat = inner_join(
+  migraine, inpat_events,
+  by = c("dupersid", "condidx")
+)
+
+# Select only DISTINCT events ("De-duplicate")
+migraine_inpat_distinct = migraine_lnk_inpat %>%
+  distinct(dupersid, evntidx, eventype)
+
+
+# Merge inpatient stays file with distinct migraine-specific inpatient stays file
+### Use the inner_join() to merge ob2021x and migraine_inpat_distinct dataframes
+### Then create a new indicator variable called "migraine_inpat_stays = 1."
+inpat_migraine = inner_join(
+  inpat2021x, migraine_inpat_distinct) %>%
+  mutate(migraine_inpat_stays = 1)
+
+
+# Merge with full-year consolidated file
+### Use the full_join() to keep all the rows from both dataframes.
+### Then create a new object called hc2021_inpat_migraine
+### & a new indicator variable called "migraine_inpat = 1"
+### & another new indicator variable called "fyc = 1."
+### Note: These are not unique rows (repeated dupersid)
+hc2021_inpat_migraine = full_join(
+  inpat_migraine %>% mutate(migraine_inpat = 1),
+  hc2021x %>% mutate(fyc = 1)
+)
+
+
+# Aggregate to person-level
+### We have to do the estimations for the person-level at this stage
+### We will estimate the total and mean values of the migraine-related expenditures
+### The "migraine_inpat" will be used to create an indicator for migraine-related expenditures
+### Need to set NA -> zero.
+per_migraine_inpat = hc2021_inpat_migraine %>%
+  group_by(dupersid, varstr, varpsu, perwt21f) %>%
+  summarize(
+    totnights_inpat                = sum(numnighx),
+    totexp_inpat                   = sum(ipxp21x),
+    avgexp_iptexp                  = mean(iptexp21),
+    totvisit_inpat                 = sum(migraine_inpat_stays),
+    avgvisit_inpat                 = mean(migraine_inpat_stays),
+    avgvisit_migraine_visits_inpat = mean(migraine_inpat),
+    migraine_inpat                 = max(migraine_inpat)) %>%
+  replace_na(
+    list(totnights_inpat = 0, totexp_inpat = 0, totvisit_inpat = 0, avgvisit_inpat = 0, avgvisit_migraine_visits_inpat = 0, migraine_inpat = 0)
+  )
+
+### QC: Should have the same number as the full-year consolidated file
+nrow(per_migraine_inpat) == nrow(hc2021)
+```
+
+
+### Part 4 - Combine office-based and inpatient expenditure files
+Once you have the <u>migraine-specific</u> inpatient expenditures dataframe completed, you can start the process to combine this with the <u>migraine-specific</u> office-based expenditures dataframe. 
+
+First, we want to merge using the `left_join` function the migraine-specific office-based expenditure dataframe with the Full-Year Consolidated file `hc2021x`. We do this because there were a couple of variables in `hc2021x` that we would like to keep such as the sex (`sex`) and race (`racev1x`) variables. We will call this new dataframe `combined_data_ob_part`.
+
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# COMBINE OBVISIT AND INPAT - SPECIFIC EXPENDITURE FILES
+### Part 1: Combine the office-based visit exp file with the hc2021x file
+combined_data_ob_part <- left_join(
+  hc2021x, 
+  per_migraine_ob,
+  by = c("dupersid", "varstr", "varpsu", "perwt21f")
+)
+```
+
+Then, we want to merge the migraine-specific inpatient expenditures `per_migraine_inpat` to the dataframe `combined_data_ob_part` to create a new dataframe called `combined_data_ob_inpat_part`.
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+### Part 2: Combine the inpatient stays file with the "combined_data_ob_part" file
+combined_data_ob_inpat_part <- left_join(
+  combined_data_ob_part, 
+  per_migraine_inpat,
+  by = c("dupersid", "varstr", "varpsu", "perwt21f")
+)
+```
+
+Once that part is completed, we will have a dataframe that includes both the <u>migraine-specific</u> office-based visit and inpatient stay expenditures. 
+
+Next, we will take this opportunity to create an indicator variable for individuals with a migraine diagnosis or condition. So far, we have identified and isolated office-based and inpatient expenditures that were <u>migraine-specific</u>. This means that some individuals with a migraine diagnosis may not have accrued any <u>migraine-specific</u> office-based or inpatient expenditures. It's possible that they have other expenditures, but those may not be <u>migraine-specific</u>. Hence, it is important that we create an indicator variable for those individuals with migraine in the comprehensive dataframe. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+### Part 3: Merge an indicator variable for migraine diagnosis. 
+### Not all patients with migraine has an expenditure.
+
+### a) Create a dataframe with the dupersid and migraine indicator.
+migraine_distinct_qc = migraine %>% 
+  distinct(dupersid) %>%
+  mutate(migraine_indicator = 1)
+
+### b) Merge "migraine_distinct_qc" to the larger table.
+### This will be a 1 to 1 join.
+combined_data_migraine <- left_join(
+  combined_data_ob_inpat_part,
+  migraine_distinct_qc,
+  by = c("dupersid"))
+
+### c) We also need to convert NA to 0 for the "migraine_indicator" variable.
+combined_data_migraine = combined_data_migraine %>%
+  replace_na(list(migraine_indicator = 0))
+```
+
+
+### Part 5 - Descriptive analysis using survey weights
+There are many ways to describe the expenditures in the migraine population. 
+
+First, we need to invoke the survey design for our data using the `svydesign` function. We will call this the `survey_cohort` design. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Define person-level survey design
+survey_cohort = svydesign(
+  id = ~varpsu, 
+  strata = ~varstr,
+  weights = ~perwt21f,
+  data = combined_data_migraine,
+  nest = TRUE)
+```
+
+Next, we can provide the average costs and amounts of office-based visit and inpatient stay expenditures for the whole cohort, both individuals with and without a migraine condition. We will use the `svyby` function to group the findings into those with migraine `migraine_indicator == 1` and those without migraine `migraine_indicator == 0`. 
+
+Note: We expect to see zero costs and amount for the non-migraine individuals. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+### Average migraine-specific office-based visit costs and amount
+svyby(~totexp_ob, ~migraine_indicator, survey_cohort, svymean)
+svyby(~totvisit_ob, ~migraine_indicator, survey_cohort, svymean)
+
+### Average migraine-specific inpatient costs and nights stayed
+svyby(~totexp_inpat, ~migraine_indicator, survey_cohort, svymean)
+svyby(~totnights_inpat, ~migraine_indicator, survey_cohort, svymean)
+```
+
+Based on these findings, the average cost for <u>migraine-specific</u> office-based visits was \$474 for individuals with a migraine condition. The average number of office-based events was 1.9 events per individual with a migraine condition. 
+
+The average <u>migraine-specific</u> inpatient stay expenditure was \$70 per individual with a migraine condition. The average <u>migraine-specific</u> inpatient nights was 0.025 nights per individual with a migraine condition. 
+
+Among individual without a migraine condition, the averages would have been zero. 
+
+Alternatively, we could have done this using a subset of the migraine cohort, but this will require us to create a subset of individuals with a migraine condition, which we will call `migraine_cohort`.
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Subgroup of individuals with inpatient stays for migraines
+migraine_cohort = subset(survey_cohort, migraine_indicator == 1)
+```
+
+Once we have the subset, we can provide the mean <u>migraine-specific</u> office-based and inpatient expenditures. Comparing the results from the subset to the whole cohort, we find that for individuals with the migraine indicator `migraine_indiciator == 1`, the average costs and amount of office-based and inpatient expenditures are the same. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+### Average migraine-specific office-based visit costs and amount
+svyby(~totexp_ob, ~migraine_indicator, migraine_cohort, svymean)
+svyby(~totvisit_ob, ~migraine_indicator, migraine_cohort, svymean)
+
+### Average migraine-specific inpatient costs and nights stayed
+svyby(~totexp_inpat, ~migraine_indicator, migraine_cohort, svymean)
+svyby(~totnights_inpat, ~migraine_indicator, migraine_cohort, svymean)
+```
+
+The average values for individuals with a migraine condition should be exactly the same in the subset and the whole cohort. 
+
+But what if we are interested in <u>migraine-specific</u> expenditures for only those individuals with a migraine AND non-zero expenditures? This would mean that we will have EXCLUDE individual with a migraine condition and ZERO expenditures. 
+
+We can do this with another subset. 
+
+The first subset we will do is the <u>migraine-specific</u> office-based visit. We will subset our migraine group from the `per_migraine_ob` dataframe and call it `migraine_ob_nonzero` to reflect the non-zero expenditures of the migraine only cohort. We'll all this subset `migraineOB`.
+
+```{r, echo = TRUE, warning = FALSE, mesage = FALSE}
+# Define person-level survey design
+migraine_ob_nonzero = svydesign(
+  id = ~varpsu, 
+  strata = ~varstr,
+  weights = ~perwt21f,
+  data = per_migraine_ob,
+  nest = TRUE)
+
+# Subgroup of individuals with office-based for migraines
+migraineOB = subset(migraine_ob_nonzero, migraine_ob == 1)
+```
+
+Once we have the new subset, we can estimate the average expenditures for <u>migraine-specific</u> office-based visits.
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+svymean(~totexp_ob, design = migraineOB) # Mean office-based expenditures
+svymean(~totvisit_ob, design = migraineOB) # Mean migraine office-based visits
+```
+
+Based on these findings, among individuals with a migraine condition and non-zero migraine-specific expenditures, the average <u>migraine-specific</u> office-based costs was \$988 and the average number of <u>migraine-specific</u> office-based events was 3.9 events. This is very different from the \$474 and 1.9 office-based events previously reported for the migraine population. 
+
+We can also do this for the inpatient expenditures subset, which we will call `migraineINPAT`. 
+
+```{r, echo = TRUE, warning = FALSE, mesage = FALSE}
+# Define person-level survey design
+migraine_inpat_nonzero = svydesign(
+  id = ~varpsu, 
+  strata = ~varstr,
+  weights = ~perwt21f,
+  data = per_migraine_inpat,
+  nest = TRUE)
+  
+# Subgroup of individuals with office-based for migraines
+migraineINPAT = subset(migraine_inpat_nonzero, migraine_inpat == 1)
+
+svymean(~totexp_inpat, design = migraineINPAT) # Mean inpatient stays expenditures
+svymean(~totnights_inpat, design = migraineINPAT) # Mean inpatient stays nights 
+```
+
+Based on these findings, among individuals with a migraine condition and non-zero migraine-specific expenditures, the average <u>migraine-specific</u> inpatient stay costs was \$7364 and the average number of nights stayed was 2.7 nights. This is very different from the \$70 and 0.025 nights previously reported for the migraine population. 
+
+Depending on how you define your cohort, these averages will be different. 
+
+There are 756 individuals with a migraine condition, but only 353 of those with a <u>migraine-specific</u> office-based visit expenditure and 7 of those with a <u>migraine-specific</u> inpatient stay expenditure. 
+
+A summary of the findings is provided below:
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, out.width = "100%", fig.cap = "Summary of findings."}
+knitr::include_graphics("Figure 4_4.png")
+```
+
+## Conclusions
+We can link events with specific conditions to get a more precise estimate of the expenditures. In this motivating example, we linked the migraine condition to its events and estimated the average office-based visit and inpatient stay expenditures. But we also explored the differences in these average when the denominator is restricted further to those with non-zero condition-specific expenditures. This process can be generalized to other conditions and other types of events. 
+
+## Acknowledgements
+This tutorial would not be possible with the resources provided by [AHRQ MEPS GitHub site](https://github.com/HHS-AHRQ/MEPS). The resources are amazing, and the codes are available for Stata, R, and SAS. Each exercise provide a new perspective on how to leverage the MEPS dataset for anyone's research or investigations. I highly encourage people to visit their site. 
+
+## Work in progress
+This is a work in progress so expect some updates in the future. 
+
+## Disclaimers
+Any errors or mistakes are those of the author. 
+
+This is only for educational purposes. 
+
+This was built under R version 4.2.2 "Innocent and Trusting"
+
+
+<!--chapter:end:04-clnk.Rmd-->
+
+# Simple trend analysis with linear models {#trends}
+
+## Introduction
+Analyzing trends can be a tricky matter. You have to consider many things such as the autoregressive correlation between values across the time interval or the seasonal effects that occur and are unrelated to the risk factor. All these issues contribute to the difficulty and challenge of trend analysis. However, there are simple ways to perform rudimentary trend analysis with linear models that might be useful for most stakeholders. 
+
+Linear models are useful because they are easy to interpret. There is no re-transformation needed, and the outputs are interpreted in terms of real units. Non-linear models may require re-transformation or some kind of adjustment to get the $\beta$ coefficients to be interpretable in real units. 
+
+Although there are a lot of different models that take into consideration the strength of the correlation between values across time (e.g., generalized estimating equation models) or the random slope and intercepts of  subjects and groups, we will use the linear effects model to interpret the trends of healthcare expenditure of a representative sample of the US non-institutionalized patients.
+
+
+## Motivating example
+We will use data from the [Agency for Healthcare Research and Quality (AHRQ) Medical Expenditure Panel Survey (MEPS)](https://meps.ahrq.gov/mepsweb/) data from 2016 to 2021. We will use R to perform the simple trend analysis.
+
+
+### Loading the libraries
+There are several libraries that we'll need to install and then load.
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+### step 1a: Load the MEPS package
+library("MEPS") ## You need to load the library every time you restart R
+
+### Step 1b: Load the other libraries
+library("survey")
+library("foreign")
+library("dplyr")
+library("ggplot2")
+library("questionr") # remotes::install_github("juba/questionr")
+library("margins")
+library("gtsummary") # remotes::install_github("ddsjoberg/gtsummary")
+library("sjPlot") # plot marginal effects ("plot_model" function)
+```
+
+
+### Loading data into the R environment
+There are two ways to load the data onto the R environment from AHRQ MEPS. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# There are two ways to load data from AHRQ MEPS website:
+#### Method 1: Load data from AHRQ MEPS website
+hc2021 = read_MEPS(file = "h233")
+hc2020 = read_MEPS(file = "h224")
+hc2019 = read_MEPS(file = "h216")
+hc2018 = read_MEPS(file = "h209")
+hc2017 = read_MEPS(file = "h201")
+hc2016 = read_MEPS(file = "h192")
+
+
+#### Method 2: Load data from AHRQ MEPS website
+hc2021 = read_MEPS(year = 2021, type = "FYC")
+hc2020 = read_MEPS(year = 2020, type = "FYC")
+hc2019 = read_MEPS(year = 2019, type = "FYC")
+hc2018 = read_MEPS(year = 2018, type = "FYC")
+hc2017 = read_MEPS(year = 2017, type = "FYC")
+hc2016 = read_MEPS(year = 2016, type = "FYC")
+```
+
+
+Once the data have been loaded onto R, we can made some edits. The first edit I make is ensure that all column or variable names are in lower case. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+
+## Change column names to lowercase
+names(hc2021) <- tolower(names(hc2021))
+names(hc2020) <- tolower(names(hc2020))
+names(hc2019) <- tolower(names(hc2019))
+names(hc2018) <- tolower(names(hc2018))
+names(hc2017) <- tolower(names(hc2017))
+names(hc2016) <- tolower(names(hc2016))
+```
+
+### Download the linkage file
+Next, we need to download the pooled linkage file. This has the updated primary sampling unit and strata for the individual respondents. This is an important file because when we pool MEPS data from different years, the primary sampling unit and strata will change. We will need to merge this with our pooled data eventually, which will be discussed later in the tutorial. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# We need the linkage file with the appropriate stratum of the primary sampling strata (STRA9621) and primary sampling unit (PSU9621). (Note: Each year, the linkage file sampling unit name changes)
+linkage = read_MEPS(type = "Pooled linkage") 
+names(linkage) <- tolower(names(linkage)) # change variable name to lower case
+```
+
+### Creating the pooled data file
+Now that we have the Full-Year Consolidated files from 2016 to 2021 and the pooled linkage files loaded onto the R environment, we can being to clean the data and merge them together. 
+
+We'll start by keeping only those variables that will be needed for our analysis. These include the following variables:
+
+* `dupersid`: The unique identifier of the individual respondent
+
+* `panel`: The panel when the individual entered the MEPS round
+
+* `varstr`: The individual sampling strata
+
+* `varpsu`: The individual primary sampling unit
+
+* `sex`: The sex variable (1 = MALE, 2 = FEMALE)
+
+* `totexp`: The total healthcare costs per individual per year (Note: This variable name was changed from the year-specific total expenditure (e.g., `totexp17f` to `totexp` because we are pooling from multiple years)
+
+* `perwt`: The person weight for the individual in the sample (Note: This variable name was changed from the year-specific person weight (e.g., `perwt7f`) to `perwt` because we are pooling from multiple years)
+
+We also created an indicator variable `year` to reflect the year the Full-Year Consolidated file was captured.
+
+When we merge all the data, we created a new variable `poolwt` where we divide the `perwt` by the number of years used in the pooled data (e.g., 6). This will generate a new individual person weight with the pooled data. 
+
+Note: For more instruction and information about pooling multiple years with MEPS data, please see the [1996-2015 Pooled Linkage Variance Estimation File](https://meps.ahrq.gov/data_stats/download_data/pufs/h36/h36u15doc.shtml). This document provides a good summary and documentation on creating a `poolwt` variable and using the pooled strata and primary sampling unit. 
+
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Select specific variables
+
+### 2021
+hc2021p = hc2021 %>%
+  rename(
+    perwt = perwt21f,
+    totexp = totexp21) %>%
+  select(
+    dupersid, 
+    panel, 
+    varstr, 
+    varpsu,
+    perwt,
+    sex,
+    totexp)
+hc2021p$year <- 2021
+
+### 2020
+hc2020p = hc2020 %>%
+  rename(
+    perwt = perwt20f,
+    totexp = totexp20) %>%
+  select(
+    dupersid, 
+    panel, 
+    varstr, 
+    varpsu,
+    perwt,
+    sex,
+    totexp)
+hc2020p$year <- 2020
+
+
+### 2019
+hc2019p = hc2019 %>%
+  rename(
+    perwt = perwt19f,
+    totexp = totexp19) %>%
+  select(
+    dupersid, 
+    panel, 
+    varstr, 
+    varpsu,
+    perwt,
+    sex,
+    totexp)
+hc2019p$year <- 2019
+
+### 2018
+hc2018p = hc2018 %>%
+  rename(
+    perwt = perwt18f,
+    totexp = totexp18) %>%
+  select(
+    dupersid, 
+    panel, 
+    varstr, 
+    varpsu,
+    perwt,
+    sex,
+    totexp)
+hc2018p$year <- 2018
+
+### 2017
+hc2017p = hc2017 %>%
+  rename(
+    perwt = perwt17f,
+    totexp = totexp17) %>%
+  select(
+    dupersid, 
+    panel, 
+    varstr, 
+    varpsu,
+    perwt,
+    sex,
+    totexp)
+hc2017p$year <- 2017
+
+### 2016
+hc2016p = hc2016 %>%
+  rename(
+    perwt = perwt16f,
+    totexp = totexp16) %>%
+  select(
+    dupersid, 
+    panel, 
+    varstr, 
+    varpsu,
+    perwt,
+    sex,
+    totexp)
+hc2016p$year <- 2016
+
+
+# Merge data and adjust the person weight by 6 years
+pool_data = bind_rows(hc2021p, 
+                      hc2020p,
+                      hc2019p,
+                      hc2018p,
+                      hc2017p,
+                      hc2016p) %>%
+  mutate(poolwt = perwt / 6)
+```
+
+
+### Merging with pooled survey primary sampling strata and unit
+Next, we need to merge the pooled years file with the updated primary sampling strata and unit from the linkage file. The linkage file is updated every year. Since the latest Full-Year Consolidated Data file that we are using includes 2021, we are using the 2021 linkage file (`HC-229I`). 
+
+We first limit the linkage file to only include the following variables:
+
+* `dupersid`: The unique identifier for the individual respondent (Note: We will need this to merge the files later)
+
+* `panel`: The panel when the individual entered the MEPS round (Note: We will need to use this to merge the files later)
+
+* `stra9621`: The pooled sampling strata
+
+* `psu9621`: The pooled primary sampling unit
+
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Reduce the linkage file to only include dupersid, panel, stra9621, psu9621
+linkage_file = linkage %>%
+  select(dupersid, panel, stra9621, psu9621)
+
+# Merge link file with main data
+pool_data_linked = left_join(pool_data,
+                             linkage_file, 
+                             by = c("dupersid", "panel"))
+```
+
+### Create factor variables
+We need to create factor variables so that we can evaluate the marginal effects. Disclaimer: I'm not sure if this is always necessary. However, I run into issues with the `margins` package when I estimated the average marginal effects in R. I get errors about the size of the dimension or vector, which indicates that the dimensions of the dataframe is not correct. I'm not sure why this error occurs, but I seem to have avoided it when I convert my categorical variables into factors. I'm not sure if this is a bug in the `margins` package or something I did with the terms in the regression model, but I'll monitor and update this tutorial if there are any changes or discoveries. For now, we'll convert our categorical variables into factors. Here, I also convert the variable `year` into a factor. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Create factor variables:
+### MALE
+pool_data_linked$male[pool_data_linked$sex == 1] = 1
+pool_data_linked$male[pool_data_linked$sex == 2] = 0
+table(pool_data_linked$male)
+pool_data_linked$male <- factor(pool_data_linked$male, levels = c(0, 1))
+class(pool_data_linked$male)
+levels(pool_data_linked$male)
+
+### YEAR
+pool_data_linked$year <- factor(pool_data_linked$year, levels = c(2016, 2017, 2018, 2019, 2020, 2021))
+class(pool_data_linked$year)
+levels(pool_data_linked$year)
+```
+
+### Set the survey options
+Next, we set the survey options so that we can estimate the survey-weighted values for our population. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+################################# SURVEY ################################# 
+
+# Set the survey options
+options(survey.lonely.psu = "adjust")
+options(survey.adjust.domain.lonely = TRUE)
+
+
+# Define the survey design
+survey_design = svydesign(
+  id = ~psu9621,
+  strata = ~stra9621,
+  weights = ~poolwt,
+  data = pool_data_linked,
+  nest = TRUE)
+```
+
+
+### Trend analysis - Plot the total healthcare costs by sex across time
+We can look at the total healthcare costs `totexp` by `sex` across time `year` with the `ggsurvey` function, which is part of the `questionr` package. 
+
+Visualizing the trends, females have a higher average total healthcare costs compared to males, and these are increasing across time. (Note: This trend was generated with the survey weights.)
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+################################ TREND ANALYSIS ################################ 
+
+# Plot total expenditures over time (Load the "questionr" package to use "ggsurvey")
+ggsurvey(survey_design) +
+  aes(x = year, y = totexp, group = factor(male), color = factor(male)) +
+  stat_summary(fun = "mean", geom = "point", size = 5) + 
+  stat_summary(fun = "mean", geom = "line", size = 1) 
+```
+
+### Regression model
+We construct a linear regression model using the `svyglm` function in R. We included the terms `sex` and `year`, and we included an interaction term `sex:year`. This interaction term provides the estimates that describe the differences in the healthcare total costs between males and females when the years changes. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Survey-weight GLM model with interaction term
+survey_model <- svyglm(totexp ~ factor(male) + factor(year) + factor(male):factor(year), survey_design)
+```
+
+We can view the estimates with their corresponding 95% confidence intervals (CIs).  
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Summary table with 95% CI
+round(
+  cbind(
+    summary(survey_model, df.resid = degf(survey_model$survey.design))$coef, 
+    confint(survey_model, df       = degf(survey_model$survey.design))
+  ), 4)
+```
+
+A nicer way of presenting the regression model output is with the `tbl_regression` function from the `gtsummary` package. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Use gtsummary to generate a clean summary table.
+survey_model %>%
+  tbl_regression(intercept = FALSE, 
+                 estimate_fun = function(x) style_sigfig(x, digits = 3),
+                 pvalue_fun = function(x) style_sigfig(x, digits = 3)) %>%
+  modify_caption("Survey-weighted linear regression")
+```
+
+From these findings, we can make several interpretations. 
+
+The most important estimates are the interaction terms. These provide the estimation or the change in healthcare total costs between males and females due to an increase in the year. For instance, the interaction term `factor(male)1:factor(year)2017` is interpreted as the average difference in the change in total healthcare costs between males and females when the year increased from 2016 to 2017. This difference in the changes in total healthcare costs between males and females is \$276.58 (95% CI: -\$215.91, \$769.07), which was not statistically significant. 
+
+### Average marginal effects between males and females at each year
+We can generate the average marginal effects or the differences in total healthcare costs between males and females at each year using the `margins` function. 
+
+For instance, the difference in total healthcare costs between males and females in 2019 was -\$990; 95% CI: -\$1,396, -\$583, which was statistically significant. This means that males had lower average total healthcare costs compared to females in 2019. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Equivalent to Stata's margin, dydx(year), at(male = 0:1)
+margins1 <- margins(survey_model, type = "response", design = survey_design, at = list(year = c(2016, 2017, 2018, 2019, 2020, 2021)), variables = "male")
+summary(margins1)
+```
+
+### Average marginal effects between years for males and females
+Alternatively, we can estimate the average marginal effects or the changes in total healthcare costs between years for males and females. 
+
+For instance, in 2021, males had an average total healthcare cost of \$1965; 95% CI: \$1,416, \$2,513, and females had an average total healthcare cost of \$1,899; 95% CI: \$1277, \$2521. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Equivalent to Stata's margin, dydx(year), at(male = 0:1)
+margins2 <- margins(survey_model, type = "response", design = survey_design, at = list(male = 0:1), variables = "year")
+summary(margins2)
+```
+
+### Plot the average marginal effects
+We can plot the average marginal effects between males and females across time `year`. We can visualize the average total healthcare costs for males and females at each year from 2016 to 2021. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Plot the marginal effects
+plot_model(survey_model, type = "pred", terms = c("year", "male"), dot.size = 4., line.size = 1)
+```
+
+We could also plot the average marginal effects using `ggplot2` with the `ggpredict` package. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Plot the predicted values
+fit.dataframe <- ggpredict(survey_model, terms = c("year", "male"), design = survey_design)
+ggplot(fit.dataframe, aes(x, predicted, colour = group)) +
+  geom_line(size = 1.5) +
+  geom_point(size = 5) + 
+  labs(
+    x = "Year",
+    y = "Total healthcare costs",
+    colour = get_legend_title(fit.dataframe)
+  )
+```
+
+There are a few important things to plot with these figures. 
+
+In the first figure below, we see that the slopes or change in average total healthcare costs across the years are displayed for the males and females. The output from the `margins` function provides us with the within group change in total healthcare costs for males and females across time. For instance, the change from 2016 to 2017 for females (which is also called the slope between 2016 and 2017) was \$165. For males, their slope was \$441.
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, out.width = "100%", fig.cap = "Average marginal effects or the Slopes of males and females."}
+knitr::include_graphics("Figure 5_2.png")
+```
+
+In the second figure, we can use the output from the `margins1` object to estimate the difference in total healthcare costs at each year between males and females. For instance, we can visualize the difference in total healthcare costs at 2019 between males and females is -\$990. 
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, out.width = "100%", fig.cap = "Differences in total healthcare costs between males and females in 2019."}
+knitr::include_graphics("Figure 5_3.png")
+```
+
+The last figure is the most important. This visualizes the interaction term results. We are mostly interested in the interaction terms for trend analysis. The interaction terms tell us the differences in the total healthcare costs between males and females as the year changes (2016 to 2018). 
+
+For instance, the slope change for females between 2018 and 2016 was approximately \$981. The slope change for males between 2018 and 2016 was \$1136. The difference between these two slope changes for males and females is \$1136 - \$981 = \$155. This is our difference in the changes estimation, or we can state that this is the differences in total healthcare costs between males and females as the year changed from 2016 to 2018. But, this was not statistically significant since the 95% CI includes zero (95% CI: \-$391, \$701).
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, out.width = "100%", fig.cap = "Interaction terms - difference in the changes between males and females when year increased from 2016 to 2018."}
+knitr::include_graphics("Figure 5_4.png")
+```
+
+
+## Conclusions
+Trend analysis can be performed using linear models. The ease of interpretation and simple execution makes this ideal for most stakeholders. Moreover, the `svyglm` function allows us to incorporate the survey weights from the complex survey design of MEPS to generate standard errors that were representative of the general U.S. population. Although the `margins` package is helpful in estimating the average marginal effects, there are other alternatives such as the [`marginaleffects` package](https://github.com/vincentarelbundock/marginaleffects). 
+
+Additionally, more complex models exist that account for autoregressive correlations and more precise estimations of the variance. However, they are harder to implement with complex survey designs. Unfortunately, I have not been able to figure out how to perform some of these more complex longitudinal data analysis with alternative models (e.g., linear mixed effects models) that incorporate the survey weights. For these scenarios, I prefer to use `Stata`, which makes it convenient to apply survey weights in more complex models. Perhaps, I'll create some tutorials using `Stata` for these more complex longitudinal models in the future. 
+
+
+## Acknowledgements
+I am grateful to the author of the `margins` package, Thomas J. Leeper. You can find his `margins` package on his [`GitHub site`](https://github.com/leeper/margins).
+
+Additionally, the `marginaleffects` package by Vincent Arel-Bundock has helped me to compare some of `R`'s marginal effects commands with `Stata`. You can find his GitHub site [here](https://github.com/vincentarelbundock/marginaleffects). 
+
+## Work in progress
+This is a work in progress so expect some updates in the future.
+
+
+## Disclaimers
+Any errors or mistakes are those of the author.
+
+This is only for educational purposes.
+
+This was built under R version 4.2.2 "Innocent and Trusting"
+
+<!--chapter:end:05-trends.Rmd-->
+
+# Interrupted time series analysis (ITSA) with R: A short tutorial {#itsa}
+
+## Introduction
+Previously, I wrote a tutorial on how to perform an interrupted time series analysis (ITSA) in `Stata`, which is located on my RPubs site ([link](https://rpubs.com/mbounthavong/itsa_stata)). This had me thinking of how to perform an ITSA using `R`. So, I decided to create a short tutorial on how to perform an ITSA on `R` using the [Agency for Healthcare Research and Quality (AHRQ) Medical Expenditure Panel Survey (MEPS)](https://meps.ahrq.gov/mepsweb/) dataset. I tried several ways to do this, and I think I've found a nice approach that leverages survey weights from the MEPS database. Although I'm writing this ITSA tutorial with this approach, I plan on researching <u>other methods</u> to perform an ITSA in `R` so stay tuned. 
+
+This short tutorial will summarize how to perform an ITSA using a linear regression model with survey weights applied from the MEPS database. (Note: I previously wrote a tutorial on how to apply weights from MEPS data ([link](https://rpubs.com/mbounthavong/MEPS_tutorial_3_applying_weights)). 
+
+## Motivating example - Total Healthcare Costs from 2016 to 2021 by sex
+We'll use the MEPS database to compare the trends in total healthcare costs between sex. We'll assume that a policy or intervention was implemented in 2019, which may have changed the healthcare costs levels and trends between males and females. 
+
+I pooled data from 2016 to 2021 and adjusted the weights. I won't go into details on how to create this dataset for this tutorial since I provided a detailed summary in a previous tutorial. For more details on how I created this dataset, please refer to my previous tutorial ([link](https://rpubs.com/mbounthavong/MEPS_tutorial_5_simple_trend_analysis)).
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# To install MEPS package in R, you need to do a couple of things.
+### Step 1: Install the "devtools" package. 
+#install.packages("devtools")
+
+### Step 2: Install the "MEPS" package from the AHRQ MEPS GitHub site. 
+#devtools::install_github("e-mitchell/meps_r_pkg/MEPS")
+
+### step 3: Load the MEPS package
+library("MEPS") ## You need to load the library every time you restart R
+
+### Step 4: Load the other libraries
+library("survey")
+library("foreign")
+library("dplyr")
+library("ggplot2")
+library("questionr") # remotes::install_github("juba/questionr")
+library("lspline")  # devtools::install_github("mbojan/lspline", build_vignettes=TRUE)
+library("ggeffects") # remotes::install_github("strengejacke/ggeffects")
+library("margins")
+
+
+# There are two ways to load data from AHRQ MEPS website:
+#### Method 1: Load data from AHRQ MEPS website
+hc2021 = read_MEPS(file = "h233")
+hc2020 = read_MEPS(file = "h224")
+hc2019 = read_MEPS(file = "h216")
+hc2018 = read_MEPS(file = "h209")
+hc2017 = read_MEPS(file = "h201")
+hc2016 = read_MEPS(file = "h192")
+
+
+#### Method 2: Load data from AHRQ MEPS website
+hc2021 = read_MEPS(year = 2021, type = "FYC")
+hc2020 = read_MEPS(year = 2020, type = "FYC")
+hc2019 = read_MEPS(year = 2019, type = "FYC")
+hc2018 = read_MEPS(year = 2018, type = "FYC")
+hc2017 = read_MEPS(year = 2017, type = "FYC")
+hc2016 = read_MEPS(year = 2016, type = "FYC")
+
+
+## Change column names to lowercase
+names(hc2021) <- tolower(names(hc2021))
+names(hc2020) <- tolower(names(hc2020))
+names(hc2019) <- tolower(names(hc2019))
+names(hc2018) <- tolower(names(hc2018))
+names(hc2017) <- tolower(names(hc2017))
+names(hc2016) <- tolower(names(hc2016))
+
+
+# We need the linkage file with the appropriate stratum of the primary sampling unit (STRA9621) and primary sampling unit (PSU9621). (Note: Each year, the linkage file sampling unit name changes)
+linkage = read_MEPS(type = "Pooled linkage") 
+names(linkage) <- tolower(names(linkage)) # change variable name to lower case
+
+
+
+# Select specific variables
+
+### 2021
+hc2021p = hc2021 %>%
+  rename(
+    perwt = perwt21f,
+    totexp = totexp21,
+    ertexp = ertexp21) %>%
+  select(
+    dupersid, 
+    panel, 
+    varstr, 
+    varpsu,
+    perwt,
+    sex,
+    totexp,
+    ertexp)
+hc2021p$year <- 2021
+
+### 2020
+hc2020p = hc2020 %>%
+  rename(
+    perwt = perwt20f,
+    totexp = totexp20,
+    ertexp = ertexp20) %>%
+  select(
+    dupersid, 
+    panel, 
+    varstr, 
+    varpsu,
+    perwt,
+    sex,
+    totexp,
+    ertexp)
+hc2020p$year <- 2020
+
+
+### 2019
+hc2019p = hc2019 %>%
+  rename(
+    perwt = perwt19f,
+    totexp = totexp19,
+    ertexp = ertexp19) %>%
+  select(
+    dupersid, 
+    panel, 
+    varstr, 
+    varpsu,
+    perwt,
+    sex,
+    totexp,
+    ertexp)
+hc2019p$year <- 2019
+
+### 2018
+hc2018p = hc2018 %>%
+  rename(
+    perwt = perwt18f,
+    totexp = totexp18,
+    ertexp = ertexp18) %>%
+  select(
+    dupersid, 
+    panel, 
+    varstr, 
+    varpsu,
+    perwt,
+    sex,
+    totexp,
+    ertexp)
+hc2018p$year <- 2018
+
+### 2017
+hc2017p = hc2017 %>%
+  rename(
+    perwt = perwt17f,
+    totexp = totexp17,
+    ertexp = ertexp17) %>%
+  select(
+    dupersid, 
+    panel, 
+    varstr, 
+    varpsu,
+    perwt,
+    sex,
+    totexp,
+    ertexp)
+hc2017p$year <- 2017
+
+### 2016
+hc2016p = hc2016 %>%
+  rename(
+    perwt = perwt16f,
+    totexp = totexp16,
+    ertexp = ertexp16) %>%
+  select(
+    dupersid, 
+    panel, 
+    varstr, 
+    varpsu,
+    perwt,
+    sex,
+    totexp,
+    ertexp)
+hc2016p$year <- 2016
+
+
+# Merge data and adjust the person weight by 6 years
+pool_data = bind_rows(hc2021p, 
+                      hc2020p,
+                      hc2019p,
+                      hc2018p,
+                      hc2017p,
+                      hc2016p) %>%
+  mutate(poolwt = perwt / 6)
+
+
+# Add a new variable for the pre-post index year at 2019
+pool_data$period[pool_data$year >= 2016 & pool_data$year < 2019] = 0
+pool_data$period[pool_data$year >= 2019 & pool_data$year < 2022] = 1
+head(pool_data)
+
+
+# Reduce the linkage file to only include dupersid, panel, stra9621, psu9621
+linkage_file = linkage %>%
+  select(dupersid, panel, stra9621, psu9621)
+
+# Merge link file with main data
+pool_data_linked = left_join(pool_data,
+                             linkage_file, 
+                             by = c("dupersid", "panel"))
+```
+
+## Interrupted Time Series Analysis Design
+In this ITSA motivating example, we are going to compare the trends in healthcare total costs between males and females before and after the hypothetical policy intervention, which was implemented in 2019. The ITSA design is illustrated in the figure below. 
+
+For this example, the ITSA model is denoted by the following:
+
+$Y_i = \beta_0 + \beta_1(T_i) + \beta_2(X_i) + \beta_3(T_i * X_i) + \beta_4(Sex_i) + \beta_5(Sex_i * T_i) + \beta_6(Sex_i * X_i) + \beta_7(Sex_i * T_i * X_i) + \epsilon_i$,
+
+where $Sex_i$ is a new variable that denotes the groups (e.g., sexes), $\beta_4$ denotes the difference in the outcomes between the groups (e.g., sexes) at beginning of the study ($T = 0$), $\beta_5$ denotes the difference in the slopes between the groups before the intervention, $\beta_6$ denotes the difference in the level changes between the groups immediately after implementation of the intervention $X$, and $\beta_7$ denotes the difference in the slopes after and before the intervention between the groups (e.g., difference-in-differences).  
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, out.width = "100%", fig.cap = "ITSA for two groups (`sex`) before and after the intervention (`X`)."}
+knitr::include_graphics("Figure 6_1.png")
+```
+
+## Set up the survey options
+In order to estimate the appropriate costs and standard errors, we will need to set up the survey options and survey design using the weights from MEPS. We will use the `svydesign` function to load the primary sampling unit, individual weights, and strata, which we will then assign to an object called `survey_design`. Please see the code below:
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Set the survey options
+options(survey.lonely.psu = "adjust")
+options(survey.adjust.domain.lonely = TRUE)
+
+
+# Define the survey design
+survey_design = svydesign(
+                          id = ~psu9621,
+                          strata = ~stra9621,
+                          weights = ~poolwt,
+                          data = pool_data_linked,
+                          nest = TRUE)
+```
+
+## Descriptive analysis
+Once that's done, we can do some descriptive analysis. 
+
+Using the `svytable` function, we can estimate the weighted-sample of males and females in the United States (US). In our MEPS dataset, there are 160,228,773 males and 166,678,038  females, which is representative of the non-institutionalized civilian US population. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+svytable(~sex, design = survey_design)
+```
+
+Moreover, we can look at the survey-weighted total healthcare costs between males and females. For instance, in 2016, the average annual total healthcare costs for males and females were \$4351 and \$5633 per person, respectively. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+df1 <- svyby(~totexp, ~year+sex, survey_design, svymean)
+df1
+```
+
+We can also look at the survey-weighted average cost before and after the intervention (before and after 2019). For instance, before the intervention the survey-weighted average total healthcare cost for males and females were \$4880 and \$6016, respectively. After the intervention, the survey-weighted average total healthcare costs for males and females were \$5954 and \$6997, respectively.
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+df2 <- svyby(~totexp, ~sex+period, survey_design, svymean)
+df2
+```
+
+We can visualize the trend of the survey-weighted total healthcare costs for males and females from 2016 to 2021 using the `ggsurvey` function. From the plot, we can see that the female group had a higher total healthcare cost trend compared to males. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# Plot total expenditures over time (Load the "questionr" package to use "ggsurvey")
+ggsurvey(survey_design) +
+  aes(x = year, y = totexp, group = factor(sex), color = factor(sex)) +
+  stat_summary(fun.y = "mean", geom = "line", size = 2)
+```
+
+## Linear regression model
+We can now construct our linear regression model using the ITSA framework. Because we have survey-weights that need to be applied, we will use the `svyglm` function. We will have several interaction terms according to the ITSA formula presented above. The triple interaction term (`factor(period):factor(sex):year`) denotes the difference-in-differences estimation. In other words, it is the difference in total healthcare costs between males and females before and after the intervention was implemented. Think of it as subtracting the difference before and after for males and the difference before and after for females. Thus, we are getting two types of differences or the difference-in-differences. 
+
+* `sex` denotes our grouping variable
+
+* `period` denotes the binary variable that denotes when the intervention was implemented (`0 = before`, `1 = after`)
+
+* `year` denotes the time variable in the model
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# ITSA: Triple interaction approach
+itsa1 <- svyglm(totexp ~ factor(sex) + factor(period) + year + factor(period):factor(sex) + factor(sex):year + factor(period):factor(sex):year, design = survey_design) ## ITSA linear model
+itsa1.confint <- confint(itsa1) ## generate the 95% CI
+
+# "cbind" the coefficient output with 95% CI output
+round(
+  cbind(
+    summary(itsa1, df.resid = degf(itsa1$survey.design))$coef, 
+    confint(itsa1, df = degf(itsa1$survey.design))
+  ), 2)
+```
+
+## Plot
+We can plot our ITSA along with the counterfactuals. We create two new objects `itsa1` and `itsa2`, which contain the predicted values from our model. The first object `itsa1` contains the predictive value with all of our terms including the triple interaction. The second object `itsa2` contains only the counterfactual terms. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+#############
+# Plot
+#############
+### Plot: Part 1 - Generate the predictions
+plot.itsa1 <- ggpredict(itsa1, terms = c("year", "sex", "period"), ci.level = 0.95) # Full model
+plot.itsa2 <- ggpredict(itsa1, terms = c("year", "sex"), ci.level = 0.95) # Counterfactual
+
+
+### Plot: Part 2 - Plot the fitted values
+# Start with the scatter (average values at each year by group)
+colors <- c("darkgreen", "navyblue") # Create color vector
+
+plot(df1$year, df1$totexp, pch = 19, cex = 1.5, lwd = 1,
+     col = colors[factor(df1$sex)],
+     xlab = "Time (year)", 
+     ylab = "Average total healthcare costs ($)",
+     ylim = c(4000, 8000))
+legend("topleft", title = "Groups", 
+       legend = c("Male", "Female"),
+       fill = c("darkgreen", "navyblue"))
+
+# Add the lines for the per-post index periods
+with(subset(plot.itsa1, x <= 2019 & group == 1 & facet == 0), lines(x, predicted, col = "darkgreen", lwd = 2))
+with(subset(plot.itsa1, x <= 2019 & group == 2 & facet == 0), lines(x, predicted, col = "navyblue", lwd = 2))
+with(subset(plot.itsa1, x >= 2019 & group == 1 & facet == 1), lines(x, predicted, col = "darkgreen", lwd = 2))
+with(subset(plot.itsa1, x >= 2019 & group == 2 & facet == 1), lines(x, predicted, col = "navyblue", lwd = 2))
+
+# Line for the index period
+abline(v = 2019, col = "red", lty = 2, lwd = 2)
+
+# Counterfactual lines
+with(subset(plot.itsa2, x >= 2019 & group == 1), lines(x, predicted, col = "darkgreen", lty = 2, lwd = 2))
+with(subset(plot.itsa2, x >= 2019 & group == 2), lines(x, predicted, col = "navyblue", lty = 2, lwd = 2))
+```
+
+
+## Parallel trends assumption
+The most critical part of the ITSA results are the parallel trends assumption and the difference-in-differences estimator. 
+
+Let's start with the parallel trends assumption. We need to test to see if the trends between males and females are similar <u>before</u> the implementation of the intervention, which we can find in our model output. Based on our findings (see `factor(sex)2:year` coefficient), the slopes between the two groups (males and females) before the intervention were not statistically different (average difference = -\$77 (95% CI: -\$350, \$196). This means that the slopes are not significantly different between males and females. See ITSA Figure below with annotations.
+
+Once we are confident that the trends prior to the implementation of the intervention are not different, any changes we see after the intervention can be attributed to the intervention. This is an important condition for the difference-in-differences design. 
+
+## Additional estimations
+We can use the `margins` command to estimate the partial derivatives of the total healthcare costs along different parts of the timeline. 
+
+For instance, the average difference in total healthcare costs for males and females <u>before</u> and <u>after</u> the intervention were \$1020 and \$777, respectively. I've summarized these results into a table below.
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+### Average difference total costs in the pre- and post-intervention periods. 
+margins1 <- margins(itsa1, type = "response", design = survey_design, at = (list(period = 0:1)), variables = "sex")
+summary(margins1)
+```
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, out.width = "100%", fig.cap = "Differences in total healthcare costs between males and females."}
+knitr::include_graphics("Figure 6_2.png")
+```
+
+We could also estimate the slopes or the average annual change in the total healthcare costs for males and females <u>after</u> the intervention using the `margins` commands. For instance, average annual change in total healthcare costs for males and females are \$252 and \$431, respectively. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+### Slopes after the intervention
+margins3 <- margins(itsa1, type = "response", design = survey_design, at = (list(period = 1, sex = (1:2))), variables = "year")
+summary(margins3)
+```
+
+## Issues with the current model
+However, it is not possible to compare the slopes using the `R` version of the `margins` package. I have tried to search for a way to do this, but the `margins` package for `R` currently can't perform this comparison. You can follow the discussion on the `margins` GitHub page ([link](https://github.com/leeper/margins/issues/124)), which discusses some potential solution. However, I prefer to use `Stata` for these comparisons. Fortunately, there is a way to make some important conclusions using a different method--the <u>linear spline model</u>.
+
+## Workaround using a linear spline model
+We could get the difference in the level change <u>immediately after</u> implementation of the intervention at `year == 2019` using the `lspline` command. We can also get the difference-in-differences estimate with this approach. 
+
+```{r, echo = TRUE, warning = FALSE, message = FALSE}
+# ITSA: Linear splines approach
+### Create a knot at 2019
+spline1 <- svyglm(totexp ~ factor(sex) + factor(period) + lspline(year, c(2019), marginal = TRUE) + factor(sex):lspline(year, c(2019), marginal = TRUE) + factor(sex):factor(period), design = survey_design)
+spline1.confint <- confint(spline1)
+
+# Output with 95% CI
+round(
+  cbind(
+    summary(spline1, df.resid = degf(spline1$survey.design))$coef, 
+    confint(spline1, df = degf(spline1$survey.design))
+  ), 2)
+```
+
+The linear spline model creates `knots` that automatically replaces some of the interactions in our previous model. For example the model element `factor(sex):lspline(year, c(2019)` replaces the triple interaction `factor(period):factor(sex):year` from our previous model. 
+
+You'll notice that some of the coefficient values are similar to our first model. For instance, in our first model, the `year` coefficient was equal to \$568, and in the linear splines model, the `lspline(year, c(2019), marginal = TRUE)1` coefficient was equal to \$568. This denotes the average change in annual total healthcare costs for males before the implementation of the intervention at `year == 2019`. 
+
+However, you'll also notice some differences. In the linear splines model, we have a couple of important coefficients that will help to complete our evaluation of the ITSA model. 
+
+## Differences in level immediately after implementation of the intervention
+One of the most important changes we are interested in is the *immediate* change after implementation of the intervention at `year == 2019`. This is captured with the `factor(sex)2:factor(period)1` coefficient, which has a value equal to -\$119 (95% CI: -\$846, \$609). This tells me that the difference in level change at `year == 2019` was lower for females than males; however, this difference was not statistically significant. See ITSA Figure below with annotations.
+
+## Difference-in-differences estimation
+Lastly, we can identify the difference-in-differences estimate from the linear spline model output in the form of the `factor(sex)2:lspline(year, c(2019), marginal = TRUE)2` coefficient, which has a value equal to \$256 (95% CI: -\$218, \$729). This coefficient denotes that average annual change in total healthcare expenditure between males and females before and after implementation of the intervention. In other words, this is a difference in the slopes for males before and after the intervention minus the difference in the slopes for females before and after the intervention. Hence, the term `difference-in-differences`. See ITSA Figure below with annotations.
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, out.width = "100%", fig.cap = "ITSA figure with annotations."}
+knitr::include_graphics("Figure 6_3.png")
+```
+
+
+## Putting it all together
+With the ITSA, we will summarize our findings into a table. These include the main coefficients from the ITSA model. 
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, out.width = "100%", fig.cap = "Summary table for main ITSA coefficients."}
+knitr::include_graphics("Figure 6_4.png")
+```
+
+
+## Conclusions
+The ITSA model is a very useful design to generate causal interpretation as long as the assumptions hold. For instance, the parallel trends assumptions needs to be assessed. Without it, it will be difficult to argue that the intervention was the only factor that could have impacted the changes in the level and trends between the groups. 
+
+In this tutorial, I ran into an issue with the first ITSA model using interaction terms. It didn't provide me with the necessary coefficients to determine the main coefficients for the ITSA. For instance, I had to use a linear spline model to identify the difference-in-differences estimate. Although the ITSA model with the triple interaction was useful in generating the plot, I could have started with the linear splines model and generated the ITSA plot afterwards with the triple interaction model. 
+
+At the end of the day, I was able to generate a summary table and a very nice figure of the ITSA. However, I will continue to learn more about other contrasting packages such as [`emmeans`](https://github.com/rvlenth/emmeans) and [`marginaleffects`](https://github.com/vincentarelbundock/marginaleffects). 
+
+Although the `margins` package in `R` doesn't have the `pwcompare` feature from `Stata`, there are some potential workarounds that I'll investigate further. Discussion about this can be found in the `margins` GitHub issues forum ([link](https://github.com/leeper/margins/issues/124))
+
+
+## Acknowledgements
+As always, I am grateful to the `R` community for producing wonderful tools for novices like me. I've learned so much reading documents, forums, and issues online that it would be impossible to credit everyone. But I would like to highlight a few superstars that I think deserve special recognition. 
+
+I am grateful to the author of the `margins` package, Thomas J. Leeper. You can find his `margins` package on his [`GitHub site`](https://github.com/leeper/margins).
+
+Additionally, the `marginaleffects` package by Vincent Arel-Bundock has helped me to compare some of `R`'s marginal effects commands with `Stata`. You can find his GitHub site [here](https://github.com/vincentarelbundock/marginaleffects). 
+
+The `emmeans` package was developed by Russel V. Length, which I plan on learning more about on his GitHub site ([link](https://github.com/rvlenth/emmeans)). Note: I found a nice overview of the `emmeans` package by Ariel Muldoon that I encourage interested users to read ([link](https://aosmith.rbind.io/2019/03/25/getting-started-with-emmeans/)). 
+
+The `ggeffect` package was very useful in helping me develop some very nice plots, which you can learn more about on their GitHub site ([link](https://strengejacke.github.io/ggeffects/)). 
+
+Lastly, I found this amazing site on ITSA by Chrissy H. Roberts [here](https://rpubs.com/chrissyhroberts/1006858). Her site helped me to create the ITSA plot which is in this tutorial. I hope you get a chance to read her blog on how to conduct an ITSA in R. I think she does a much better job that I did with this tutorial. 
+
+
+## Work in progress
+This is a work in progress so expect some updates in the future.
+
+
+## Disclaimers
+Any errors or mistakes are those of the author.
+
+This is only for educational purposes.
+
+This was built under R version 4.3.1 "Beagle Scouts"
+
+
+<!--chapter:end:06-linearsplines.Rmd-->
+
+# Helpful Notes {#notes}
+
+## Introduction
+
+There are several things that I've learned while exploring and using the Agency for Health Research and Quality (AHRQ) Medical Expenditure Panel Survey (MEPS) data. Although there are (very good) documentations provided by AHRQ MEPS, I thought I would write a short article about some of the ("hard") lessons I learned. 
+
+In this article, I summarize some of these lessons in no particular order. I may expand on this list as time goes on, but for now, I will start off with a few of these.
+
+
+### 1. MEPS file names
+
+AHRQ MEPS has a [GitHub site](https://github.com/HHS-AHRQ/MEPS/tree/master) with a lot of resources. One of the most useful resource is a list of their MEPS files. This list contains the MEPS file names, which are used to identify the data for import using the `MEPS` package. 
+
+For example, we can use the `read_MEPS()` function to import the MEPS file of interest (Note: Make sure you have an internet connection). The file name for the 2021 Full-Year Consolidated File is `"h233"`. 
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+### Load MEPS library
+library("MEPS")
+
+### Import the 2021 Full Year Consolidated File
+hc2021 = read_MEPS(file = "h233") # Full-year consolidated file
+```
+
+You can find the list of the MEPS file names [here](https://github.com/HHS-AHRQ/MEPS/blob/master/Quick_Reference_Guides/meps_file_names.csv). 
+
+Here is an example of some of the file codes:
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, out.width = "100%", fig.cap = "Figure - MEPS file codes example."}
+knitr::include_graphics("Figure 7_2 - MEPS - File codes.png")
+```
+
+
+### 2. Expenditure categories
+
+MEPS contains a ton of expenditure categories such as outpatient and inpatient. This is helpful when you want to **deconstruct** the total expenditures into its different components. 
+
+Here is a list of the various expenditure categories from the [2021 Full Year Consolidated file](https://meps.ahrq.gov/data_stats/download_data/pufs/h233/h233doc.shtml). 
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, out.width = "100%", fig.cap = "Figure - MEPS expenditure categories."}
+knitr::include_graphics("Figure 7_1 - MEPS - Appendix 3.png")
+```
+
+
+#### 2.1. Example expenditure categories
+
+For example, the 2021 annual costs variable for office-based visits is `OBVEXP21`. Each of these expenditure categories represent different areas of care that an individual can access. I provide a summary of a select few. 
+
+* `OBVEXP21` denotes the office-based visits costs for 2021. These include encounters that are provided in the physician's office or clinic setting. It does not include encounters associated with the hospital, nursing home, or patient's home.     
+
+* `OBTOTV21` denotes the number of office-based visits in 2021. 
+
+* `OPTEXP21` denotes the outpatient visit costs for 2021. These include encounters in hospital's outpatient departments. The total costs for an outpatient visit contains the facility and "SBD" expenses. (Note: "SBD" is short for "separate billing doctor" and refers to physicians who are billed separately for services provided at the hospital or site. They are not included in the facility-only costs.)
+
+* `ERTEXP21` denotes the emergency department visit costs for 2021. Emergency department visit that result in an inpatient stay are "rolled" up into the inpatient costs. You should be aware that "double-counting" can occur as a consequence of this "roll-up." MEPS handles this by assigning \$0 to the emergency department facility costs. Physician costs and the number of emergency department visits are not affect by this "roll-up" issue. 
+
+* `ERTOT21` denotes the number of emergency room visits in 2021. 
+
+* `IPTEXP21` denotes the inpatient visit costs for 2021. Inpatient visit costs include the facility and SBD costs. 
+
+* `IPDIS21` denotes the number of hospital discharges.
+
+* `IPNGTD21` denotes the number of nights associated with hospital discharges. 
+
+* `RXEXP21` denotes the total medication costs for 2021. These costs include payments by insurers, health plan benefits, public (Medicare and Medicaid), VA, and out-of-pocket costs. 
+
+* `RXTOT21` denotes the number of prescription fills and refills for 2021. 
+
+### 3. Sources of payments
+
+Each expenditure is composed of various sources of payments. Some a mostly composed of public or private payers. Some are mostly out-of-pocket payments. MEPS breaks these down into many parts, the sum of which should equal the total expenditures. 
+
+#### 3.1. Example of sources of payments
+In Appendix 3, the `***` that are listed in the expenditure categories as placeholders for the source of payment codes. These codes are listed in the Figure above. For example, the code for total payments is `EXP`, and the code for out-of-pocket payments is `SLF` or self. Thus, the total payments for emergency department visits in 2021 is `ERTEXP21`, and the out-of-pocket payments for total prescription medicines in 2021 is `RXSLF21`.
+
+Below is an illustration on how to match expenditure variable codes with the source of payment codes. 
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, out.width = "100%", fig.cap = "Figure - MEPS expenditure categories."}
+knitr::include_graphics("Figure 7_3 - MEPS - codes files match.png")
+```
+
+
+
+## References
+
+Most of the information can be found on the AHRQ MEPS [website](https://meps.ahrq.gov/mepsweb/). I encourage the learner to read through the documentations for each data file. It's rich with useful information. 
+
+Another great resource is the AHRQ MEPS GitHub [page](https://github.com/HHS-AHRQ/MEPS). There are example codes on how to use the MEPS data based on R, Stata, and SAS. 
+
+
+## Disclaimer
+
+I plan to update this as I learn more about MEPS data, so stay tuned. 
+
+This is for educational purposes only. 
+
+
+
+
+
+
+
+
+
+<!--chapter:end:07-helpfulnotes.Rmd-->
+

@@ -6,13 +6,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>MEPS tutorials</title>
   <meta name="description" content="This is a collection of MEPS tutorials." />
-  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.30 and GitBook 2.6.7" />
 
   <meta property="og:title" content="MEPS tutorials" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="This is a collection of MEPS tutorials." />
-  <meta name="github-repo" content="rstudio/bookdown-demo" />
+  <meta name="github-repo" content="mbounthavong/MEPS_tutorials_book" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="MEPS tutorials" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Mark Bounthavong" />
 
 
-<meta name="date" content="2023-07-22" />
+<meta name="date" content="2024-01-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -119,28 +119,6 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
-<style type="text/css">
-/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}
-</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -158,7 +136,11 @@ div.csl-indent {
 <li><a href="./">MEPS Tutorials Collection</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#book-link"><i class="fa fa-check"></i>Book link</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#table-of-contents"><i class="fa fa-check"></i>Table of contents</a></li>
+</ul></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Loading MEPS data into R</a>
 <ul>
 <li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#introduction"><i class="fa fa-check"></i><b>1.1</b> Introduction</a></li>
@@ -187,24 +169,77 @@ div.csl-indent {
 <li class="chapter" data-level="3.5" data-path="weights.html"><a href="weights.html#conclusions-2"><i class="fa fa-check"></i><b>3.5</b> Conclusions</a></li>
 <li class="chapter" data-level="3.6" data-path="weights.html"><a href="weights.html#acknowledgements-2"><i class="fa fa-check"></i><b>3.6</b> Acknowledgements</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html"><i class="fa fa-check"></i><b>4</b> Footnotes and citations</a>
+<li class="chapter" data-level="4" data-path="clnk.html"><a href="clnk.html"><i class="fa fa-check"></i><b>4</b> Using condition-event link (<code>CLNK</code>) file</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html#footnotes"><i class="fa fa-check"></i><b>4.1</b> Footnotes</a></li>
-<li class="chapter" data-level="4.2" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html#citations"><i class="fa fa-check"></i><b>4.2</b> Citations</a></li>
-</ul></li>
-<li class="chapter" data-level="5" data-path="blocks.html"><a href="blocks.html"><i class="fa fa-check"></i><b>5</b> Blocks</a>
+<li class="chapter" data-level="4.1" data-path="clnk.html"><a href="clnk.html#introduction-3"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.2" data-path="clnk.html"><a href="clnk.html#motivating-example---migraine-specific-expenditures"><i class="fa fa-check"></i><b>4.2</b> Motivating example - Migraine-specific expenditures</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="blocks.html"><a href="blocks.html#equations"><i class="fa fa-check"></i><b>5.1</b> Equations</a></li>
-<li class="chapter" data-level="5.2" data-path="blocks.html"><a href="blocks.html#theorems-and-proofs"><i class="fa fa-check"></i><b>5.2</b> Theorems and proofs</a></li>
-<li class="chapter" data-level="5.3" data-path="blocks.html"><a href="blocks.html#callout-blocks"><i class="fa fa-check"></i><b>5.3</b> Callout blocks</a></li>
+<li class="chapter" data-level="4.2.1" data-path="clnk.html"><a href="clnk.html#part-1---setup"><i class="fa fa-check"></i><b>4.2.1</b> Part 1 - Setup</a></li>
+<li class="chapter" data-level="4.2.2" data-path="clnk.html"><a href="clnk.html#part-2---migraine-specific-office-based-expenditures"><i class="fa fa-check"></i><b>4.2.2</b> Part 2 - Migraine-specific office-based expenditures</a></li>
+<li class="chapter" data-level="4.2.3" data-path="clnk.html"><a href="clnk.html#part-3---migraine-specific-inpatient-expenditures"><i class="fa fa-check"></i><b>4.2.3</b> Part 3 - Migraine-specific inpatient expenditures</a></li>
+<li class="chapter" data-level="4.2.4" data-path="clnk.html"><a href="clnk.html#part-4---combine-office-based-and-inpatient-expenditure-files"><i class="fa fa-check"></i><b>4.2.4</b> Part 4 - Combine office-based and inpatient expenditure files</a></li>
+<li class="chapter" data-level="4.2.5" data-path="clnk.html"><a href="clnk.html#part-5---descriptive-analysis-using-survey-weights"><i class="fa fa-check"></i><b>4.2.5</b> Part 5 - Descriptive analysis using survey weights</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="sharing-your-book.html"><a href="sharing-your-book.html"><i class="fa fa-check"></i><b>6</b> Sharing your book</a>
+<li class="chapter" data-level="4.3" data-path="clnk.html"><a href="clnk.html#conclusions-3"><i class="fa fa-check"></i><b>4.3</b> Conclusions</a></li>
+<li class="chapter" data-level="4.4" data-path="clnk.html"><a href="clnk.html#acknowledgements-3"><i class="fa fa-check"></i><b>4.4</b> Acknowledgements</a></li>
+<li class="chapter" data-level="4.5" data-path="clnk.html"><a href="clnk.html#work-in-progress"><i class="fa fa-check"></i><b>4.5</b> Work in progress</a></li>
+<li class="chapter" data-level="4.6" data-path="clnk.html"><a href="clnk.html#disclaimers"><i class="fa fa-check"></i><b>4.6</b> Disclaimers</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="trends.html"><a href="trends.html"><i class="fa fa-check"></i><b>5</b> Simple trend analysis with linear models</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="sharing-your-book.html"><a href="sharing-your-book.html#publishing"><i class="fa fa-check"></i><b>6.1</b> Publishing</a></li>
-<li class="chapter" data-level="6.2" data-path="sharing-your-book.html"><a href="sharing-your-book.html#pages"><i class="fa fa-check"></i><b>6.2</b> 404 pages</a></li>
-<li class="chapter" data-level="6.3" data-path="sharing-your-book.html"><a href="sharing-your-book.html#metadata-for-sharing"><i class="fa fa-check"></i><b>6.3</b> Metadata for sharing</a></li>
+<li class="chapter" data-level="5.1" data-path="trends.html"><a href="trends.html#introduction-4"><i class="fa fa-check"></i><b>5.1</b> Introduction</a></li>
+<li class="chapter" data-level="5.2" data-path="trends.html"><a href="trends.html#motivating-example"><i class="fa fa-check"></i><b>5.2</b> Motivating example</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="trends.html"><a href="trends.html#loading-the-libraries"><i class="fa fa-check"></i><b>5.2.1</b> Loading the libraries</a></li>
+<li class="chapter" data-level="5.2.2" data-path="trends.html"><a href="trends.html#loading-data-into-the-r-environment"><i class="fa fa-check"></i><b>5.2.2</b> Loading data into the R environment</a></li>
+<li class="chapter" data-level="5.2.3" data-path="trends.html"><a href="trends.html#download-the-linkage-file"><i class="fa fa-check"></i><b>5.2.3</b> Download the linkage file</a></li>
+<li class="chapter" data-level="5.2.4" data-path="trends.html"><a href="trends.html#creating-the-pooled-data-file"><i class="fa fa-check"></i><b>5.2.4</b> Creating the pooled data file</a></li>
+<li class="chapter" data-level="5.2.5" data-path="trends.html"><a href="trends.html#merging-with-pooled-survey-primary-sampling-strata-and-unit"><i class="fa fa-check"></i><b>5.2.5</b> Merging with pooled survey primary sampling strata and unit</a></li>
+<li class="chapter" data-level="5.2.6" data-path="trends.html"><a href="trends.html#create-factor-variables"><i class="fa fa-check"></i><b>5.2.6</b> Create factor variables</a></li>
+<li class="chapter" data-level="5.2.7" data-path="trends.html"><a href="trends.html#set-the-survey-options"><i class="fa fa-check"></i><b>5.2.7</b> Set the survey options</a></li>
+<li class="chapter" data-level="5.2.8" data-path="trends.html"><a href="trends.html#trend-analysis---plot-the-total-healthcare-costs-by-sex-across-time"><i class="fa fa-check"></i><b>5.2.8</b> Trend analysis - Plot the total healthcare costs by sex across time</a></li>
+<li class="chapter" data-level="5.2.9" data-path="trends.html"><a href="trends.html#regression-model"><i class="fa fa-check"></i><b>5.2.9</b> Regression model</a></li>
+<li class="chapter" data-level="5.2.10" data-path="trends.html"><a href="trends.html#average-marginal-effects-between-males-and-females-at-each-year"><i class="fa fa-check"></i><b>5.2.10</b> Average marginal effects between males and females at each year</a></li>
+<li class="chapter" data-level="5.2.11" data-path="trends.html"><a href="trends.html#average-marginal-effects-between-years-for-males-and-females"><i class="fa fa-check"></i><b>5.2.11</b> Average marginal effects between years for males and females</a></li>
+<li class="chapter" data-level="5.2.12" data-path="trends.html"><a href="trends.html#plot-the-average-marginal-effects"><i class="fa fa-check"></i><b>5.2.12</b> Plot the average marginal effects</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="5.3" data-path="trends.html"><a href="trends.html#conclusions-4"><i class="fa fa-check"></i><b>5.3</b> Conclusions</a></li>
+<li class="chapter" data-level="5.4" data-path="trends.html"><a href="trends.html#acknowledgements-4"><i class="fa fa-check"></i><b>5.4</b> Acknowledgements</a></li>
+<li class="chapter" data-level="5.5" data-path="trends.html"><a href="trends.html#work-in-progress-1"><i class="fa fa-check"></i><b>5.5</b> Work in progress</a></li>
+<li class="chapter" data-level="5.6" data-path="trends.html"><a href="trends.html#disclaimers-1"><i class="fa fa-check"></i><b>5.6</b> Disclaimers</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="itsa.html"><a href="itsa.html"><i class="fa fa-check"></i><b>6</b> Interrupted time series analysis (ITSA) with R: A short tutorial</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="itsa.html"><a href="itsa.html#introduction-5"><i class="fa fa-check"></i><b>6.1</b> Introduction</a></li>
+<li class="chapter" data-level="6.2" data-path="itsa.html"><a href="itsa.html#motivating-example---total-healthcare-costs-from-2016-to-2021-by-sex"><i class="fa fa-check"></i><b>6.2</b> Motivating example - Total Healthcare Costs from 2016 to 2021 by sex</a></li>
+<li class="chapter" data-level="6.3" data-path="itsa.html"><a href="itsa.html#interrupted-time-series-analysis-design"><i class="fa fa-check"></i><b>6.3</b> Interrupted Time Series Analysis Design</a></li>
+<li class="chapter" data-level="6.4" data-path="itsa.html"><a href="itsa.html#set-up-the-survey-options"><i class="fa fa-check"></i><b>6.4</b> Set up the survey options</a></li>
+<li class="chapter" data-level="6.5" data-path="itsa.html"><a href="itsa.html#descriptive-analysis"><i class="fa fa-check"></i><b>6.5</b> Descriptive analysis</a></li>
+<li class="chapter" data-level="6.6" data-path="itsa.html"><a href="itsa.html#linear-regression-model"><i class="fa fa-check"></i><b>6.6</b> Linear regression model</a></li>
+<li class="chapter" data-level="6.7" data-path="itsa.html"><a href="itsa.html#plot"><i class="fa fa-check"></i><b>6.7</b> Plot</a></li>
+<li class="chapter" data-level="6.8" data-path="itsa.html"><a href="itsa.html#parallel-trends-assumption"><i class="fa fa-check"></i><b>6.8</b> Parallel trends assumption</a></li>
+<li class="chapter" data-level="6.9" data-path="itsa.html"><a href="itsa.html#additional-estimations"><i class="fa fa-check"></i><b>6.9</b> Additional estimations</a></li>
+<li class="chapter" data-level="6.10" data-path="itsa.html"><a href="itsa.html#issues-with-the-current-model"><i class="fa fa-check"></i><b>6.10</b> Issues with the current model</a></li>
+<li class="chapter" data-level="6.11" data-path="itsa.html"><a href="itsa.html#workaround-using-a-linear-spline-model"><i class="fa fa-check"></i><b>6.11</b> Workaround using a linear spline model</a></li>
+<li class="chapter" data-level="6.12" data-path="itsa.html"><a href="itsa.html#differences-in-level-immediately-after-implementation-of-the-intervention"><i class="fa fa-check"></i><b>6.12</b> Differences in level immediately after implementation of the intervention</a></li>
+<li class="chapter" data-level="6.13" data-path="itsa.html"><a href="itsa.html#difference-in-differences-estimation"><i class="fa fa-check"></i><b>6.13</b> Difference-in-differences estimation</a></li>
+<li class="chapter" data-level="6.14" data-path="itsa.html"><a href="itsa.html#putting-it-all-together"><i class="fa fa-check"></i><b>6.14</b> Putting it all together</a></li>
+<li class="chapter" data-level="6.15" data-path="itsa.html"><a href="itsa.html#conclusions-5"><i class="fa fa-check"></i><b>6.15</b> Conclusions</a></li>
+<li class="chapter" data-level="6.16" data-path="itsa.html"><a href="itsa.html#acknowledgements-5"><i class="fa fa-check"></i><b>6.16</b> Acknowledgements</a></li>
+<li class="chapter" data-level="6.17" data-path="itsa.html"><a href="itsa.html#work-in-progress-2"><i class="fa fa-check"></i><b>6.17</b> Work in progress</a></li>
+<li class="chapter" data-level="6.18" data-path="itsa.html"><a href="itsa.html#disclaimers-2"><i class="fa fa-check"></i><b>6.18</b> Disclaimers</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="notes.html"><a href="notes.html"><i class="fa fa-check"></i><b>7</b> Helpful Notes</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="notes.html"><a href="notes.html#introduction-6"><i class="fa fa-check"></i><b>7.1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="notes.html"><a href="notes.html#meps-file-names"><i class="fa fa-check"></i><b>7.1.1</b> 1. MEPS file names</a></li>
+<li class="chapter" data-level="7.1.2" data-path="notes.html"><a href="notes.html#expenditure-categories"><i class="fa fa-check"></i><b>7.1.2</b> 2. Expenditure categories</a></li>
+<li class="chapter" data-level="7.1.3" data-path="notes.html"><a href="notes.html#sources-of-payments"><i class="fa fa-check"></i><b>7.1.3</b> 3. Sources of payments</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="notes.html"><a href="notes.html#references"><i class="fa fa-check"></i><b>7.2</b> References</a></li>
+<li class="chapter" data-level="7.3" data-path="notes.html"><a href="notes.html#disclaimer"><i class="fa fa-check"></i><b>7.3</b> Disclaimer</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -228,18 +263,28 @@ div.csl-indent {
 <div id="header">
 <h1 class="title">MEPS tutorials</h1>
 <p class="author"><em>Mark Bounthavong</em></p>
-<p class="date"><em>2023-07-22</em></p>
+<p class="date"><em>2024-01-21</em></p>
 </div>
 <div id="about" class="section level1 unnumbered hasAnchor">
 <h1>About<a href="index.html#about" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>This is a collection of tutorials that use data from the Agency for Healthcare Research and Quality (AHRQ) <a href="https://meps.ahrq.gov/mepsweb/">Medical Expenditure Panel Survey (MEPS)</a>.</p>
 <p>These tutorials use <a href="https://cran.r-project.org/">R</a> and <a href="https://posit.co/products/open-source/rstudio/">RStudio</a> for data loading, manipulation, analysis, and presentation.</p>
+<div id="book-link" class="section level2 unnumbered hasAnchor">
+<h2>Book link<a href="index.html#book-link" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The GitHub link to the MEPS tutorials collection: <a href="https://mbounthavong.github.io/MEPS_tutorials_book/" class="uri">https://mbounthavong.github.io/MEPS_tutorials_book/</a></p>
+</div>
+<div id="table-of-contents" class="section level2 unnumbered hasAnchor">
+<h2>Table of contents<a href="index.html#table-of-contents" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Chapter <a href="intro.html#intro">1</a> provides an introduction on how to load and import MEPS data into R.</p>
 <p>Chapter <a href="merging.html#merging">2</a> is an instruction on how to merge various MEPS data files.</p>
 <p>Chapter <a href="weights.html#weights">3</a> focuses on applying weights to the population.</p>
+<p>Chapter <a href="clnk.html#clnk">4</a> using condition-event link file</p>
+<p>Chapter <a href="trends.html#trends">5</a> simple trend analysis with linear models</p>
+<p>Chapter <a href="itsa.html#itsa">6</a> interrupted time series analysis</p>
+<p>Chapter <a href="notes.html#notes">7</a> helpful notes</p>
 <p>Further chapters are forthcoming.</p>
 
+</div>
 </div>
             </section>
 
@@ -262,15 +307,15 @@ div.csl-indent {
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
-"github": false,
-"facebook": true,
-"twitter": true,
+"github": true,
+"facebook": false,
+"twitter": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
 "whatsapp": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+"all": false
 },
 "fontsettings": {
 "theme": "white",

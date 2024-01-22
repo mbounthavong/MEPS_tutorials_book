@@ -1,0 +1,17 @@
+h1:clnk Using condition-event link () file
+h2:introduction Introduction
+fig:echo MEPS Appendix 3 - Expenditure variables
+fig:echo Type of event record (`eventype`)
+h2:motivating-example---migraine-specific-expenditures Motivating example - Migraine-specific expenditures
+h3:part-1---setup Part 1 - Setup
+h3:part-2---migraine-specific-office-based-expenditures Part 2 - Migraine-specific office-based expenditures
+fig:echo Visual explanation of the code chunk
+h3:part-3---migraine-specific-inpatient-expenditures Part 3 - Migraine-specific inpatient expenditures
+h3:part-4---combine-office-based-and-inpatient-expenditure-files Part 4 - Combine office-based and inpatient expenditure files
+h3:part-5---descriptive-analysis-using-survey-weights Part 5 - Descriptive analysis using survey weights
+fig:echo Summary of findings.
+h2:conclusions Conclusions
+h2:acknowledgements Acknowledgements
+h2:work-in-progress Work in progress
+h2:disclaimers Disclaimers
+

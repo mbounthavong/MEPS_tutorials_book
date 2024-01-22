@@ -6,13 +6,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 3 Applying weights | MEPS tutorials</title>
   <meta name="description" content="This is a collection of MEPS tutorials." />
-  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.30 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 3 Applying weights | MEPS tutorials" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="This is a collection of MEPS tutorials." />
-  <meta name="github-repo" content="rstudio/bookdown-demo" />
+  <meta name="github-repo" content="mbounthavong/MEPS_tutorials_book" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 3 Applying weights | MEPS tutorials" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Mark Bounthavong" />
 
 
-<meta name="date" content="2023-07-22" />
+<meta name="date" content="2024-01-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="merging.html"/>
-<link rel="next" href="footnotes-and-citations.html"/>
+<link rel="next" href="clnk.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -119,28 +119,6 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
-<style type="text/css">
-/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}
-</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -158,7 +136,11 @@ div.csl-indent {
 <li><a href="./">MEPS Tutorials Collection</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#book-link"><i class="fa fa-check"></i>Book link</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#table-of-contents"><i class="fa fa-check"></i>Table of contents</a></li>
+</ul></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Loading MEPS data into R</a>
 <ul>
 <li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#introduction"><i class="fa fa-check"></i><b>1.1</b> Introduction</a></li>
@@ -187,24 +169,77 @@ div.csl-indent {
 <li class="chapter" data-level="3.5" data-path="weights.html"><a href="weights.html#conclusions-2"><i class="fa fa-check"></i><b>3.5</b> Conclusions</a></li>
 <li class="chapter" data-level="3.6" data-path="weights.html"><a href="weights.html#acknowledgements-2"><i class="fa fa-check"></i><b>3.6</b> Acknowledgements</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html"><i class="fa fa-check"></i><b>4</b> Footnotes and citations</a>
+<li class="chapter" data-level="4" data-path="clnk.html"><a href="clnk.html"><i class="fa fa-check"></i><b>4</b> Using condition-event link (<code>CLNK</code>) file</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html#footnotes"><i class="fa fa-check"></i><b>4.1</b> Footnotes</a></li>
-<li class="chapter" data-level="4.2" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html#citations"><i class="fa fa-check"></i><b>4.2</b> Citations</a></li>
-</ul></li>
-<li class="chapter" data-level="5" data-path="blocks.html"><a href="blocks.html"><i class="fa fa-check"></i><b>5</b> Blocks</a>
+<li class="chapter" data-level="4.1" data-path="clnk.html"><a href="clnk.html#introduction-3"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.2" data-path="clnk.html"><a href="clnk.html#motivating-example---migraine-specific-expenditures"><i class="fa fa-check"></i><b>4.2</b> Motivating example - Migraine-specific expenditures</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="blocks.html"><a href="blocks.html#equations"><i class="fa fa-check"></i><b>5.1</b> Equations</a></li>
-<li class="chapter" data-level="5.2" data-path="blocks.html"><a href="blocks.html#theorems-and-proofs"><i class="fa fa-check"></i><b>5.2</b> Theorems and proofs</a></li>
-<li class="chapter" data-level="5.3" data-path="blocks.html"><a href="blocks.html#callout-blocks"><i class="fa fa-check"></i><b>5.3</b> Callout blocks</a></li>
+<li class="chapter" data-level="4.2.1" data-path="clnk.html"><a href="clnk.html#part-1---setup"><i class="fa fa-check"></i><b>4.2.1</b> Part 1 - Setup</a></li>
+<li class="chapter" data-level="4.2.2" data-path="clnk.html"><a href="clnk.html#part-2---migraine-specific-office-based-expenditures"><i class="fa fa-check"></i><b>4.2.2</b> Part 2 - Migraine-specific office-based expenditures</a></li>
+<li class="chapter" data-level="4.2.3" data-path="clnk.html"><a href="clnk.html#part-3---migraine-specific-inpatient-expenditures"><i class="fa fa-check"></i><b>4.2.3</b> Part 3 - Migraine-specific inpatient expenditures</a></li>
+<li class="chapter" data-level="4.2.4" data-path="clnk.html"><a href="clnk.html#part-4---combine-office-based-and-inpatient-expenditure-files"><i class="fa fa-check"></i><b>4.2.4</b> Part 4 - Combine office-based and inpatient expenditure files</a></li>
+<li class="chapter" data-level="4.2.5" data-path="clnk.html"><a href="clnk.html#part-5---descriptive-analysis-using-survey-weights"><i class="fa fa-check"></i><b>4.2.5</b> Part 5 - Descriptive analysis using survey weights</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="sharing-your-book.html"><a href="sharing-your-book.html"><i class="fa fa-check"></i><b>6</b> Sharing your book</a>
+<li class="chapter" data-level="4.3" data-path="clnk.html"><a href="clnk.html#conclusions-3"><i class="fa fa-check"></i><b>4.3</b> Conclusions</a></li>
+<li class="chapter" data-level="4.4" data-path="clnk.html"><a href="clnk.html#acknowledgements-3"><i class="fa fa-check"></i><b>4.4</b> Acknowledgements</a></li>
+<li class="chapter" data-level="4.5" data-path="clnk.html"><a href="clnk.html#work-in-progress"><i class="fa fa-check"></i><b>4.5</b> Work in progress</a></li>
+<li class="chapter" data-level="4.6" data-path="clnk.html"><a href="clnk.html#disclaimers"><i class="fa fa-check"></i><b>4.6</b> Disclaimers</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="trends.html"><a href="trends.html"><i class="fa fa-check"></i><b>5</b> Simple trend analysis with linear models</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="sharing-your-book.html"><a href="sharing-your-book.html#publishing"><i class="fa fa-check"></i><b>6.1</b> Publishing</a></li>
-<li class="chapter" data-level="6.2" data-path="sharing-your-book.html"><a href="sharing-your-book.html#pages"><i class="fa fa-check"></i><b>6.2</b> 404 pages</a></li>
-<li class="chapter" data-level="6.3" data-path="sharing-your-book.html"><a href="sharing-your-book.html#metadata-for-sharing"><i class="fa fa-check"></i><b>6.3</b> Metadata for sharing</a></li>
+<li class="chapter" data-level="5.1" data-path="trends.html"><a href="trends.html#introduction-4"><i class="fa fa-check"></i><b>5.1</b> Introduction</a></li>
+<li class="chapter" data-level="5.2" data-path="trends.html"><a href="trends.html#motivating-example"><i class="fa fa-check"></i><b>5.2</b> Motivating example</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="trends.html"><a href="trends.html#loading-the-libraries"><i class="fa fa-check"></i><b>5.2.1</b> Loading the libraries</a></li>
+<li class="chapter" data-level="5.2.2" data-path="trends.html"><a href="trends.html#loading-data-into-the-r-environment"><i class="fa fa-check"></i><b>5.2.2</b> Loading data into the R environment</a></li>
+<li class="chapter" data-level="5.2.3" data-path="trends.html"><a href="trends.html#download-the-linkage-file"><i class="fa fa-check"></i><b>5.2.3</b> Download the linkage file</a></li>
+<li class="chapter" data-level="5.2.4" data-path="trends.html"><a href="trends.html#creating-the-pooled-data-file"><i class="fa fa-check"></i><b>5.2.4</b> Creating the pooled data file</a></li>
+<li class="chapter" data-level="5.2.5" data-path="trends.html"><a href="trends.html#merging-with-pooled-survey-primary-sampling-strata-and-unit"><i class="fa fa-check"></i><b>5.2.5</b> Merging with pooled survey primary sampling strata and unit</a></li>
+<li class="chapter" data-level="5.2.6" data-path="trends.html"><a href="trends.html#create-factor-variables"><i class="fa fa-check"></i><b>5.2.6</b> Create factor variables</a></li>
+<li class="chapter" data-level="5.2.7" data-path="trends.html"><a href="trends.html#set-the-survey-options"><i class="fa fa-check"></i><b>5.2.7</b> Set the survey options</a></li>
+<li class="chapter" data-level="5.2.8" data-path="trends.html"><a href="trends.html#trend-analysis---plot-the-total-healthcare-costs-by-sex-across-time"><i class="fa fa-check"></i><b>5.2.8</b> Trend analysis - Plot the total healthcare costs by sex across time</a></li>
+<li class="chapter" data-level="5.2.9" data-path="trends.html"><a href="trends.html#regression-model"><i class="fa fa-check"></i><b>5.2.9</b> Regression model</a></li>
+<li class="chapter" data-level="5.2.10" data-path="trends.html"><a href="trends.html#average-marginal-effects-between-males-and-females-at-each-year"><i class="fa fa-check"></i><b>5.2.10</b> Average marginal effects between males and females at each year</a></li>
+<li class="chapter" data-level="5.2.11" data-path="trends.html"><a href="trends.html#average-marginal-effects-between-years-for-males-and-females"><i class="fa fa-check"></i><b>5.2.11</b> Average marginal effects between years for males and females</a></li>
+<li class="chapter" data-level="5.2.12" data-path="trends.html"><a href="trends.html#plot-the-average-marginal-effects"><i class="fa fa-check"></i><b>5.2.12</b> Plot the average marginal effects</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="5.3" data-path="trends.html"><a href="trends.html#conclusions-4"><i class="fa fa-check"></i><b>5.3</b> Conclusions</a></li>
+<li class="chapter" data-level="5.4" data-path="trends.html"><a href="trends.html#acknowledgements-4"><i class="fa fa-check"></i><b>5.4</b> Acknowledgements</a></li>
+<li class="chapter" data-level="5.5" data-path="trends.html"><a href="trends.html#work-in-progress-1"><i class="fa fa-check"></i><b>5.5</b> Work in progress</a></li>
+<li class="chapter" data-level="5.6" data-path="trends.html"><a href="trends.html#disclaimers-1"><i class="fa fa-check"></i><b>5.6</b> Disclaimers</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="itsa.html"><a href="itsa.html"><i class="fa fa-check"></i><b>6</b> Interrupted time series analysis (ITSA) with R: A short tutorial</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="itsa.html"><a href="itsa.html#introduction-5"><i class="fa fa-check"></i><b>6.1</b> Introduction</a></li>
+<li class="chapter" data-level="6.2" data-path="itsa.html"><a href="itsa.html#motivating-example---total-healthcare-costs-from-2016-to-2021-by-sex"><i class="fa fa-check"></i><b>6.2</b> Motivating example - Total Healthcare Costs from 2016 to 2021 by sex</a></li>
+<li class="chapter" data-level="6.3" data-path="itsa.html"><a href="itsa.html#interrupted-time-series-analysis-design"><i class="fa fa-check"></i><b>6.3</b> Interrupted Time Series Analysis Design</a></li>
+<li class="chapter" data-level="6.4" data-path="itsa.html"><a href="itsa.html#set-up-the-survey-options"><i class="fa fa-check"></i><b>6.4</b> Set up the survey options</a></li>
+<li class="chapter" data-level="6.5" data-path="itsa.html"><a href="itsa.html#descriptive-analysis"><i class="fa fa-check"></i><b>6.5</b> Descriptive analysis</a></li>
+<li class="chapter" data-level="6.6" data-path="itsa.html"><a href="itsa.html#linear-regression-model"><i class="fa fa-check"></i><b>6.6</b> Linear regression model</a></li>
+<li class="chapter" data-level="6.7" data-path="itsa.html"><a href="itsa.html#plot"><i class="fa fa-check"></i><b>6.7</b> Plot</a></li>
+<li class="chapter" data-level="6.8" data-path="itsa.html"><a href="itsa.html#parallel-trends-assumption"><i class="fa fa-check"></i><b>6.8</b> Parallel trends assumption</a></li>
+<li class="chapter" data-level="6.9" data-path="itsa.html"><a href="itsa.html#additional-estimations"><i class="fa fa-check"></i><b>6.9</b> Additional estimations</a></li>
+<li class="chapter" data-level="6.10" data-path="itsa.html"><a href="itsa.html#issues-with-the-current-model"><i class="fa fa-check"></i><b>6.10</b> Issues with the current model</a></li>
+<li class="chapter" data-level="6.11" data-path="itsa.html"><a href="itsa.html#workaround-using-a-linear-spline-model"><i class="fa fa-check"></i><b>6.11</b> Workaround using a linear spline model</a></li>
+<li class="chapter" data-level="6.12" data-path="itsa.html"><a href="itsa.html#differences-in-level-immediately-after-implementation-of-the-intervention"><i class="fa fa-check"></i><b>6.12</b> Differences in level immediately after implementation of the intervention</a></li>
+<li class="chapter" data-level="6.13" data-path="itsa.html"><a href="itsa.html#difference-in-differences-estimation"><i class="fa fa-check"></i><b>6.13</b> Difference-in-differences estimation</a></li>
+<li class="chapter" data-level="6.14" data-path="itsa.html"><a href="itsa.html#putting-it-all-together"><i class="fa fa-check"></i><b>6.14</b> Putting it all together</a></li>
+<li class="chapter" data-level="6.15" data-path="itsa.html"><a href="itsa.html#conclusions-5"><i class="fa fa-check"></i><b>6.15</b> Conclusions</a></li>
+<li class="chapter" data-level="6.16" data-path="itsa.html"><a href="itsa.html#acknowledgements-5"><i class="fa fa-check"></i><b>6.16</b> Acknowledgements</a></li>
+<li class="chapter" data-level="6.17" data-path="itsa.html"><a href="itsa.html#work-in-progress-2"><i class="fa fa-check"></i><b>6.17</b> Work in progress</a></li>
+<li class="chapter" data-level="6.18" data-path="itsa.html"><a href="itsa.html#disclaimers-2"><i class="fa fa-check"></i><b>6.18</b> Disclaimers</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="notes.html"><a href="notes.html"><i class="fa fa-check"></i><b>7</b> Helpful Notes</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="notes.html"><a href="notes.html#introduction-6"><i class="fa fa-check"></i><b>7.1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="notes.html"><a href="notes.html#meps-file-names"><i class="fa fa-check"></i><b>7.1.1</b> 1. MEPS file names</a></li>
+<li class="chapter" data-level="7.1.2" data-path="notes.html"><a href="notes.html#expenditure-categories"><i class="fa fa-check"></i><b>7.1.2</b> 2. Expenditure categories</a></li>
+<li class="chapter" data-level="7.1.3" data-path="notes.html"><a href="notes.html#sources-of-payments"><i class="fa fa-check"></i><b>7.1.3</b> 3. Sources of payments</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="notes.html"><a href="notes.html#references"><i class="fa fa-check"></i><b>7.2</b> References</a></li>
+<li class="chapter" data-level="7.3" data-path="notes.html"><a href="notes.html#disclaimer"><i class="fa fa-check"></i><b>7.3</b> Disclaimer</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -327,14 +362,26 @@ div.csl-indent {
 <span id="cb35-5"><a href="weights.html#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Contingency table (crosstabulations between sex and poverty category)</span></span>
 <span id="cb35-6"><a href="weights.html#cb35-6" aria-hidden="true" tabindex="-1"></a>mepsdsgn <span class="sc">%&gt;%</span></span>
 <span id="cb35-7"><a href="weights.html#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_svysummary</span>(<span class="at">by =</span> sex, <span class="at">percent =</span> <span class="st">&quot;column&quot;</span>, <span class="at">include =</span> <span class="fu">c</span>(povcat20))</span></code></pre></div>
-<div id="gpztyazmia" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>html {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+<div id="dgyfhlngma" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#dgyfhlngma table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-#gpztyazmia .gt_table {
+#dgyfhlngma thead, #dgyfhlngma tbody, #dgyfhlngma tfoot, #dgyfhlngma tr, #dgyfhlngma td, #dgyfhlngma th {
+  border-style: none;
+}
+
+#dgyfhlngma p {
+  margin: 0;
+  padding: 0;
+}
+
+#dgyfhlngma .gt_table {
   display: table;
   border-collapse: collapse;
+  line-height: normal;
   margin-left: auto;
   margin-right: auto;
   color: #333333;
@@ -357,24 +404,12 @@ div.csl-indent {
   border-left-color: #D3D3D3;
 }
 
-#gpztyazmia .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#gpztyazmia .gt_caption {
+#dgyfhlngma .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#gpztyazmia .gt_title {
+#dgyfhlngma .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -386,25 +421,37 @@ div.csl-indent {
   border-bottom-width: 0;
 }
 
-#gpztyazmia .gt_subtitle {
+#dgyfhlngma .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
-  padding-top: 0;
-  padding-bottom: 6px;
+  padding-top: 3px;
+  padding-bottom: 5px;
   padding-left: 5px;
   padding-right: 5px;
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
 
-#gpztyazmia .gt_bottom_border {
+#dgyfhlngma .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#dgyfhlngma .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#gpztyazmia .gt_col_headings {
+#dgyfhlngma .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -419,7 +466,7 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#gpztyazmia .gt_col_heading {
+#dgyfhlngma .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -439,7 +486,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#gpztyazmia .gt_column_spanner_outer {
+#dgyfhlngma .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -451,15 +498,15 @@ div.csl-indent {
   padding-right: 4px;
 }
 
-#gpztyazmia .gt_column_spanner_outer:first-child {
+#dgyfhlngma .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#gpztyazmia .gt_column_spanner_outer:last-child {
+#dgyfhlngma .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#gpztyazmia .gt_column_spanner {
+#dgyfhlngma .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -471,7 +518,11 @@ div.csl-indent {
   width: 100%;
 }
 
-#gpztyazmia .gt_group_heading {
+#dgyfhlngma .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#dgyfhlngma .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -497,7 +548,7 @@ div.csl-indent {
   text-align: left;
 }
 
-#gpztyazmia .gt_empty_group_heading {
+#dgyfhlngma .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -512,15 +563,15 @@ div.csl-indent {
   vertical-align: middle;
 }
 
-#gpztyazmia .gt_from_md > :first-child {
+#dgyfhlngma .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#gpztyazmia .gt_from_md > :last-child {
+#dgyfhlngma .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#gpztyazmia .gt_row {
+#dgyfhlngma .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -539,7 +590,7 @@ div.csl-indent {
   overflow-x: hidden;
 }
 
-#gpztyazmia .gt_stub {
+#dgyfhlngma .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -552,7 +603,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#gpztyazmia .gt_stub_row_group {
+#dgyfhlngma .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -566,11 +617,15 @@ div.csl-indent {
   vertical-align: top;
 }
 
-#gpztyazmia .gt_row_group_first td {
+#dgyfhlngma .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#gpztyazmia .gt_summary_row {
+#dgyfhlngma .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#dgyfhlngma .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -580,16 +635,16 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#gpztyazmia .gt_first_summary_row {
+#dgyfhlngma .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#gpztyazmia .gt_first_summary_row.thick {
+#dgyfhlngma .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#gpztyazmia .gt_last_summary_row {
+#dgyfhlngma .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -599,7 +654,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#gpztyazmia .gt_grand_summary_row {
+#dgyfhlngma .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -609,7 +664,7 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#gpztyazmia .gt_first_grand_summary_row {
+#dgyfhlngma .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -619,11 +674,21 @@ div.csl-indent {
   border-top-color: #D3D3D3;
 }
 
-#gpztyazmia .gt_striped {
+#dgyfhlngma .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dgyfhlngma .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#gpztyazmia .gt_table_body {
+#dgyfhlngma .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -632,7 +697,7 @@ div.csl-indent {
   border-bottom-color: #D3D3D3;
 }
 
-#gpztyazmia .gt_footnotes {
+#dgyfhlngma .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -646,30 +711,8 @@ div.csl-indent {
   border-right-color: #D3D3D3;
 }
 
-#gpztyazmia .gt_footnote {
+#dgyfhlngma .gt_footnote {
   margin: 0px;
-  font-size: 90%;
-  padding-left: 4px;
-  padding-right: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#gpztyazmia .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#gpztyazmia .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -677,80 +720,101 @@ div.csl-indent {
   padding-right: 5px;
 }
 
-#gpztyazmia .gt_left {
+#dgyfhlngma .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#dgyfhlngma .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dgyfhlngma .gt_left {
   text-align: left;
 }
 
-#gpztyazmia .gt_center {
+#dgyfhlngma .gt_center {
   text-align: center;
 }
 
-#gpztyazmia .gt_right {
+#dgyfhlngma .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#gpztyazmia .gt_font_normal {
+#dgyfhlngma .gt_font_normal {
   font-weight: normal;
 }
 
-#gpztyazmia .gt_font_bold {
+#dgyfhlngma .gt_font_bold {
   font-weight: bold;
 }
 
-#gpztyazmia .gt_font_italic {
+#dgyfhlngma .gt_font_italic {
   font-style: italic;
 }
 
-#gpztyazmia .gt_super {
+#dgyfhlngma .gt_super {
   font-size: 65%;
 }
 
-#gpztyazmia .gt_footnote_marks {
-  font-style: italic;
-  font-weight: normal;
+#dgyfhlngma .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
+  position: initial;
 }
 
-#gpztyazmia .gt_asterisk {
+#dgyfhlngma .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#gpztyazmia .gt_indent_1 {
+#dgyfhlngma .gt_indent_1 {
   text-indent: 5px;
 }
 
-#gpztyazmia .gt_indent_2 {
+#dgyfhlngma .gt_indent_2 {
   text-indent: 10px;
 }
 
-#gpztyazmia .gt_indent_3 {
+#dgyfhlngma .gt_indent_3 {
   text-indent: 15px;
 }
 
-#gpztyazmia .gt_indent_4 {
+#dgyfhlngma .gt_indent_4 {
   text-indent: 20px;
 }
 
-#gpztyazmia .gt_indent_5 {
+#dgyfhlngma .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
-<table class="gt_table">
-  
-  <thead class="gt_col_headings">
-    <tr>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    
+    <tr class="gt_col_headings">
       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;Characteristic&lt;/strong&gt;"><strong>Characteristic</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;1 - Male&lt;/strong&gt;, N = 160,960,989&lt;sup class=&quot;gt_footnote_marks&quot;&gt;1&lt;/sup&gt;"><strong>1 - Male</strong>, N = 160,960,989<sup class="gt_footnote_marks">1</sup></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;2 - Female&lt;/strong&gt;, N = 167,584,308&lt;sup class=&quot;gt_footnote_marks&quot;&gt;1&lt;/sup&gt;"><strong>2 - Female</strong>, N = 167,584,308<sup class="gt_footnote_marks">1</sup></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;1 - Male&lt;/strong&gt;, N = 160,960,989&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>1 - Male</strong>, N = 160,960,989<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;2 - Female&lt;/strong&gt;, N = 167,584,308&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>2 - Female</strong>, N = 167,584,308<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
     </tr>
   </thead>
   <tbody class="gt_table_body">
     <tr><td headers="label" class="gt_row gt_left">FAMILY INC AS % OF POVERTY LINE - CATEGORICAL</td>
-<td headers="stat_1" class="gt_row gt_center"></td>
-<td headers="stat_2" class="gt_row gt_center"></td></tr>
+<td headers="stat_1" class="gt_row gt_center"><br /></td>
+<td headers="stat_2" class="gt_row gt_center"><br /></td></tr>
     <tr><td headers="label" class="gt_row gt_left">    1</td>
 <td headers="stat_1" class="gt_row gt_center">16,644,995 (10%)</td>
 <td headers="stat_2" class="gt_row gt_center">21,002,826 (13%)</td></tr>
@@ -770,7 +834,7 @@ div.csl-indent {
   
   <tfoot class="gt_footnotes">
     <tr>
-      <td class="gt_footnote" colspan="3"><sup class="gt_footnote_marks">1</sup> n (%)</td>
+      <td class="gt_footnote" colspan="3"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> n (%)</td>
     </tr>
   </tfoot>
 </table>
@@ -795,7 +859,7 @@ div.csl-indent {
         </div>
       </div>
 <a href="merging.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="footnotes-and-citations.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="clnk.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -810,15 +874,15 @@ div.csl-indent {
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
-"github": false,
-"facebook": true,
-"twitter": true,
+"github": true,
+"facebook": false,
+"twitter": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
 "whatsapp": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+"all": false
 },
 "fontsettings": {
 "theme": "white",
