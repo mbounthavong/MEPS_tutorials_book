@@ -1,0 +1,147 @@
+---
+title: "MEPS Tutorial 3 - Applying weights"
+author: "Mark Bounthavong"
+date: "2023-01-13"
+output:
+  rmdformats::downcute:
+    self_contained: yes
+    thumbnails: no
+    lightbox: yes
+    gallery: no
+    highlight: tango
+---
+
+## Introduction
+The [Medical Expenditure Panel Survey (MEPS)](https://www.meps.ahrq.gov/mepsweb/) is based on a complex survey design. Hence, it is necessary to apply survey weights to generate estimates that are representative of the United States (US) population. The weights take into account the stratification, clustering, sampling, and non-response based on the Current Population Survey. Although you can perform descriptive and complex analyses without the weights, they will not provide you with accurate standard errors of the population. Rather, not applying the weights will only yield standard errors for the sample. 
+
+## Types of weights
+In MEPS, there are three types of weights that are critical for most descriptive and multivariate analyses: person weight (`perwtXXf`), stratum (`varstr`), and cluster (`varpsu`). The `XX` is replaced by the year of the survey. For example, the person weight in 2020 is labelled as `perwt20f`. 
+
+## Loading the data
+Let's use the MEPS Full-Year Consolidated File from 2020. From our previous tutorial, you can load data using the `MEPS` library function `read_MEPS`. There are two methods that you can use to load data into R. 
+
+```{r, echo = TRUE}
+### Load the MEPS package
+library("MEPS") ## You need to load the library every time you restart R
+
+#### Method 1: Load data from AHRQ MEPS website
+hc2020 = read_MEPS(file = "h224")
+
+#### Method 2: Load data from AHRQ MEPS website
+hc2020 = read_MEPS(year = 2020, type = "FYC")
+
+## Change column names to lowercase
+names(hc2020) <- tolower(names(hc2020))
+```
+
+Once the data has been loaded, we can look at how many variables there are. 
+
+```{r, echo = TRUE}
+## The number of columns represents the number of variables in the hc2020 dataframe. 
+ncol(hc2020)
+```
+
+We have over 1400 variable. This is a very large dataframe. We can reduce this to a manageable size by keeping only the variables that are important. Let's keep the unique patient identifier (`dupersid`), weights (`perwt20f`, `varstr`, and `varpsu`), and the total expenditures (`totexp20`). 
+
+```{r, echo = TRUE}
+## Create a smaller dataframe
+keep_hc2020 <- subset(hc2020, select = c(dupersid, perwt20f, varstr, varpsu, totexp20, sex, povcat20))
+head(keep_hc2020)
+```
+
+We can add labels to the `sex` variable where `1 = male` and `2 = female`.
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+keep_hc2020$sex <- factor(keep_hc2020$sex, 
+                          levels = c(1, 2),
+                          labels = c("1 - Male", "2 - Female"))
+```
+
+## Perform descriptive analysis
+Now that we have a smaller dataframe with the variables of interest, let's apply the survey weights to some descriptive analysis. 
+
+Suppose you were interested in the average age of the cohort. You will need to apply the survey weights to generate the mean and standard deviation. The `survey` package comes with the `svydesign` function, which uses the survey weights in the Full-Year Consolidated File data and applies them to the cohort in preparation for analyses. 
+
+First, you will need to set the options to `adjust`, which centers the single-PSU strata arund the grand mean rather than the stratum mean. With MEPS data, we are using single-PSU (or "lonely" PSU), which is used to estimate the variance by calculating the difference of the sum of the statum's PSU and the average statum's PSU. The, we use the `svydesign` function to generate a complex survey design dataset (which we will call `mepsdsgn`) for analysis by applying the survey weights. 
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+## Load the "survey" package
+library("survey")
+
+## Apply the survey weights to the dataframe using the svydesign function
+options(survey.lonely.psu = 'adjust')
+
+mepsdsgn = svydesign(
+  id = ~varpsu,
+  strata = ~varstr,
+  weights = ~perwt20f,
+  data = keep_hc2020,
+  nest = TRUE)
+```
+
+Once the survey weights have been applied, we can use the `survey` functions to perform some descriptive analysis on the `mepsdsgn` data.
+
+First, let's see how many patients we have that is representative of the US population by sex. We use the `svytable` function to generate the weight sample for males and females. Adding these together will yield the weighted sample of the US population.
+
+```{r, echo = TRUE}
+## Weighted sample of the population stratified by sex
+svytable(~sex, design = mepsdsgn)
+```
+
+Using the survey weights, there are 160,960,989 males and 167,584,308 females. In total, there are 328,545,297 weighted subjects in the `mepsdsgn` data. 
+
+Let's move on and estimate the average total expenditures for the total sample.  
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+## Estimate the weighted mean total expenditure for the sample
+svymean(~totexp20, design = mepsdsgn)
+```
+
+The `svymean` function generates the appropriate average and standard error (SE) of the total sample that is representative of the US population. In 2020, the average total expenditure was \$6266 (SE, 164). 
+
+In our `mepsdsgn` data, we have sex, which is a binary variable. Let's estimate the total expenditures between males and females in the MEPS Full-Year Consolidated data. To estimate the mean between two groups, we'll need to use the `svyby` function along with the `svymean` function. 
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+## Estimate the weight mean total expenditure for males and females
+svyby(~totexp20, ~sex, mepsdsgn, svymean)
+```
+
+The average total expenditures for male and female are \$5861 (SE, 244) and \$6655 (SE 205), respectively. 
+
+We can perform crosstabulations with the `svytable` function. Let's look at the distribution of males and females across various poverty categories. In the MEPS codebook, poverty category are groups as: 1 = Poor/Negative, 2 = Near Poor, 3 = Low Income, 4 = Middle Income, and 5 = High Income. 
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+## Crosstab sex and poverty category
+svytable(~sex + povcat20, design = mepsdsgn)
+```
+
+To generate the proportions, you will need to use `prop.table`. We add the `margin = 1` option to calculate the column total.
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+prop.table(svytable(~sex + povcat20, design = mepsdsgn), margin = 1) ### margin = 1 calculates the column total.
+```
+
+We can combine these into a contingency table using the `tbl_svysummary` function from the `gtsummary` package. We will also use the `tidyverse` package to manipulate the data more easily. 
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+## Load libraries 
+library("tidyverse")
+library("gtsummary")
+
+## Contingency table (crosstabulations between sex and poverty category)
+mepsdsgn %>%
+  tbl_svysummary(by = sex, percent = "column", include = c(povcat20))
+```
+
+Based on these weighted sample numbers, there are more males who are in the High Income category compared to females (46% versus 42%). 
+
+## Conclusions
+The MEPS data uses weights to generate estimations that are reflective of the US population. The `survey` package from R will allow us to apply these weights using the `svydesign` function, which requires us to enter the patient weight, stratum, and cluster values. Once these are applied, we can use the suite of functions from the `survey` package to perform descriptive analysis on the population. The `svymean` generates the population average and the `svytable` generates the population frequencies. Having a good understanding of how these weights are used with MEPS data will allow you to generate estimates of the population in your epidemiology work. 
+
+## Acknowledgements
+The `survey` package and functions were developed by [Thomas Lumley](https://profiles.auckland.ac.nz/t-lumley) and can be found [here](https://www.rdocumentation.org/packages/survey/versions/4.1-1).
+
+The `gtsummary` package and instructions are developed by Daniel D. Sjoberg, Joseph Larmarange, Michael Curry, Jessica Lavery, Karissa Whiting, Emily C. Zabor, which can be found at their [website](https://www.danieldsjoberg.com/gtsummary/reference/tbl_svysummary.html).
+
+This is a work in progress, and I expect to make updates in the future. 
+

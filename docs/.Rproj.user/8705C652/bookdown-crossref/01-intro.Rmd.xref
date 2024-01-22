@@ -1,0 +1,10 @@
+h1:intro Loading MEPS data into R
+h2:introduction Introduction
+h2:meps-data MEPS Data
+fig:echo Figure 1 - Location of MEPS data files
+fig:echo Figure 2 - Full-Year Consolidated Data files and other data types
+h2:load-meps-data-into-r Load MEPS data into R
+fig:echo Figure 3 - H224 is the MEP 2020 Full-Year Consolidated Data file.
+h2:conclusions Conclusions
+h2:acknowledgements Acknowledgements
+

@@ -1,0 +1,17 @@
+h1:merging Merging files
+h2:introduction Introduction
+h2:load-meps-data Load MEPS data
+h2:merge-meps-data Merge MEPS data
+fig:echo Figure 1 - Example table with unique patients.
+fig:echo Figure 2 - Example table where the unique patient identifier repeats.
+fig:echo Figure 3a - Merging tables (1 to many).
+fig:echo Figure 3b - Merging tables with all patients in the Full-Year Consolidated Data file and some of the data from the Medical Conditions file.
+fig:echo Figure 4 - Merging data from Table A to Table B.
+h2:reduce-dataframe-to-a-few-variables Reduce dataframe to a few variables
+h2:add-an-indicator-for-a-specific-icd10-diagnostic-code Add an indicator for a specific ICD10 diagnostic code
+fig:echo Figure 5 - Indicator variable for diabetes.
+h2:collapse-dataframe-to-a-single-unique-patient Collapse dataframe to a single unique patient
+fig:echo Figure 6 - Collapse rows to a unique patient with a diabetes indicator.
+h2:conclusions Conclusions
+h2:acknowledgements Acknowledgements
+
